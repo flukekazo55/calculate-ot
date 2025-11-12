@@ -35,7 +35,7 @@ build/
 *.old
 
 # Data file (optional – ลบออกถ้าอยากเก็บ data.json ใน repo)
-data.json
+# data.json #ต้องการให้ข้อมูลไปใช้ที่เครื่องอื่นได้
 
 # IDE / Editor settings
 .vscode/
