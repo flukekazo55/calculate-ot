@@ -406,6 +406,21 @@
         showAlertModal({ icon: "success", text });
       const showInfo = (text) =>
         showAlertModal({ icon: "info", text });
+      function patchNativeAlerts() {
+        const patched = (message) => {
+          const text =
+            message === undefined || message === null
+              ? ""
+              : String(message);
+          showInfo(text);
+        };
+        window.alert = patched;
+        try {
+          console.alert = patched;
+        } catch {
+          console.log("console.alert override not supported.");
+        }
+      }
       async function confirmAction({
         titleKey = "confirmResetTitle",
         textKey = "confirmReset",
@@ -635,6 +650,7 @@
       $("#calcBtn").addEventListener("click", calc);
       $("#resetBtn").addEventListener("click", resetData);
       $("#useBtn").addEventListener("click", useOT);
+      patchNativeAlerts();
       setupLanguageSelector();
       applyTranslations();
       loadData();
