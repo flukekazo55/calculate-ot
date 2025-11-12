@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "โปรเจกต์เว็บแอปพลิเคชันสำหรับคำนวณและบันทึกเวลาทำงานล่วงเวลา (OT) พร้อมระบบเก็บข้อมูลลงไฟล์ `data.json` โดยใช้ Node.js และ Express ตกแต่งด้วยโทนสีเขียว และฟอนต์ Kanit จาก Google Fonts",
   "dependencies": {
     "express": "^5.1.0"
   }
