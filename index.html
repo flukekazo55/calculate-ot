@@ -101,21 +101,22 @@
       <h1 class="fw-bold mb-2" data-i18n="heading">ตัวคิดเวลา OT</h1>
 
       <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-        <label
-          for="languageSelect"
-          class="form-label mb-0"
-          data-i18n="languageLabel"
-        >
-          ภาษา
-        </label>
-        <select
-          id="languageSelect"
-          class="form-select form-select-sm"
-          style="max-width: 160px"
-        >
-          <option value="th">ไทย (TH)</option>
-          <option value="en">English (EN)</option>
-        </select>
+        <span class="form-label mb-0" data-i18n="languageLabel">ภาษา</span>
+        <div class="form-check form-switch m-0">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="languageToggle"
+          />
+          <label
+            class="form-check-label fw-semibold"
+            for="languageToggle"
+            id="languageToggleLabel"
+          >
+            TH
+          </label>
+        </div>
       </div>
 
       <div
@@ -421,6 +422,23 @@
           console.log("console.alert override not supported.");
         }
       }
+      function setupLanguageToggle() {
+        const toggle = $("#languageToggle");
+        if (!toggle) return;
+        const label = $("#languageToggleLabel");
+        const syncLabel = () => {
+          if (label) label.textContent = toggle.checked ? "EN" : "TH";
+        };
+        toggle.checked = currentLang === "en";
+        syncLabel();
+        toggle.addEventListener("change", (event) => {
+          const nextLang = event.target.checked ? "en" : "th";
+          currentLang = translations[nextLang] ? nextLang : "th";
+          localStorage.setItem("otLang", currentLang);
+          syncLabel();
+          applyTranslations();
+        });
+      }
       async function confirmAction({
         titleKey = "confirmResetTitle",
         textKey = "confirmReset",
@@ -633,25 +651,20 @@
             if (typeof value === "string")
               node.setAttribute("placeholder", value);
           });
+        const toggle = $("#languageToggle");
+        if (toggle) {
+          toggle.checked = currentLang === "en";
+          const label = $("#languageToggleLabel");
+          if (label) label.textContent = toggle.checked ? "EN" : "TH";
+        }
         const initVisible = $("#initBalance")?.style.display === "block";
         renderSummary(initVisible);
-      }
-      function setupLanguageSelector() {
-        const select = $("#languageSelect");
-        if (!select) return;
-        select.value = currentLang;
-        select.addEventListener("change", (event) => {
-          const nextLang = event.target.value;
-          currentLang = translations[nextLang] ? nextLang : "th";
-          localStorage.setItem("otLang", currentLang);
-          applyTranslations();
-        });
       }
       $("#calcBtn").addEventListener("click", calc);
       $("#resetBtn").addEventListener("click", resetData);
       $("#useBtn").addEventListener("click", useOT);
       patchNativeAlerts();
-      setupLanguageSelector();
+      setupLanguageToggle();
       applyTranslations();
       loadData();
     </script>
