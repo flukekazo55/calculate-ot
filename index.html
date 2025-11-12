@@ -240,6 +240,7 @@
       </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       const localeMap = { th: "th-TH", en: "en-US" };
       const translations = {
@@ -267,9 +268,16 @@
           grandTotalLabel: "รวมทั้งหมด",
           initBalanceLabel: "ยอด OT ปัจจุบันทั้งหมด",
           languageLabel: "ภาษา",
+          okBtn: "ตกลง",
+          cancelBtn: "ยกเลิก",
+          infoTitle: "แจ้งเตือน",
+          successTitle: "สำเร็จ",
+          errorTitle: "เกิดข้อผิดพลาด",
+          confirmResetTitle: "ยืนยันการล้างข้อมูล?",
           defaultActivity: "ไม่ระบุ",
           useDefaultNote: "ใช้ OT",
           confirmReset: "ล้างข้อมูลทั้งหมด?",
+          resetSuccess: "ล้างข้อมูลเรียบร้อยแล้ว",
           calcInvalidRange: "เวลาสิ้นสุดต้องมากกว่าเวลาเริ่ม",
           calcSuccess: (activity, durationText) =>
             `บันทึกสำเร็จ: ${activity} (${durationText})`,
@@ -306,9 +314,16 @@
           grandTotalLabel: "Total",
           initBalanceLabel: "Current OT Balance",
           languageLabel: "Language",
+          okBtn: "OK",
+          cancelBtn: "Cancel",
+          infoTitle: "Notice",
+          successTitle: "Success",
+          errorTitle: "Something went wrong",
+          confirmResetTitle: "Reset all data?",
           defaultActivity: "Unspecified",
           useDefaultNote: "Use OT",
           confirmReset: "Clear every record?",
+          resetSuccess: "All records have been cleared.",
           calcInvalidRange: "End time must be later than start time",
           calcSuccess: (activity, durationText) =>
             `Saved successfully: ${activity} (${durationText})`,
@@ -368,6 +383,45 @@
         if (typeof value === "function") return value(...args);
         return value ?? key;
       };
+      const defaultTitleByIcon = {
+        success: "successTitle",
+        error: "errorTitle",
+        info: "infoTitle",
+        warning: "infoTitle",
+      };
+      function showAlertModal({ icon = "info", titleKey, text = "" }) {
+        const resolvedKey = titleKey || defaultTitleByIcon[icon];
+        const resolvedTitle = resolvedKey ? t(resolvedKey) : "";
+        return Swal.fire({
+          icon,
+          title: resolvedTitle,
+          text,
+          confirmButtonText: t("okBtn"),
+          heightAuto: false,
+        });
+      }
+      const showError = (text) =>
+        showAlertModal({ icon: "error", text });
+      const showSuccess = (text) =>
+        showAlertModal({ icon: "success", text });
+      const showInfo = (text) =>
+        showAlertModal({ icon: "info", text });
+      async function confirmAction({
+        titleKey = "confirmResetTitle",
+        textKey = "confirmReset",
+      } = {}) {
+        const result = await Swal.fire({
+          icon: "warning",
+          title: t(titleKey),
+          text: t(textKey),
+          showCancelButton: true,
+          confirmButtonText: t("okBtn"),
+          cancelButtonText: t("cancelBtn"),
+          focusCancel: true,
+          heightAuto: false,
+        });
+        return result.isConfirmed;
+      }
       function calcWeighted(type, s, e) {
         const b = parseTime("17:00");
         const segments = splitLunch(s, e);
@@ -405,29 +459,36 @@
         });
       }
       async function resetData() {
-        if (confirm(t("confirmReset"))) {
-          await fetch("/reset", { method: "POST" });
-          localStorage.clear();
-          renderSummary();
-        }
+        const confirmed = await confirmAction();
+        if (!confirmed) return;
+        await fetch("/reset", { method: "POST" });
+        localStorage.clear();
+        renderSummary();
+        await showSuccess(t("resetSuccess"));
       }
-      function calc() {
+      async function calc() {
         const type = $("#dayType").value;
         const actInput = $("#activity");
         const act =
           (actInput?.value || "").trim() || t("defaultActivity");
         const s = parseTime($("#startTime").value);
         const e = parseTime($("#endTime").value);
-        if (e <= s) return alert(t("calcInvalidRange"));
+        if (e <= s) {
+          await showError(t("calcInvalidRange"));
+          return;
+        }
         const { weightedMin } = calcWeighted(type, s, e);
         const earnedHours = weightedMin / 60;
         saveRecord("earn", earnedHours, act, type);
-        alert(t("calcSuccess", act, toHM(earnedHours).text));
+        await showSuccess(t("calcSuccess", act, toHM(earnedHours).text));
       }
-      function useOT() {
+      async function useOT() {
         const timeText = ($("#useTime").value || "").trim();
         const min = parseHHMM(timeText);
-        if (min === null) return alert(t("useInvalidFormat"));
+        if (min === null) {
+          await showError(t("useInvalidFormat"));
+          return;
+        }
         const hr = min / 60;
         const note =
           ($("#useNote").value || "").trim() || t("useDefaultNote");
@@ -437,7 +498,10 @@
           0
         );
         const after = before - hr;
-        if (after < 0) return alert(t("useOverLimit"));
+        if (after < 0) {
+          await showError(t("useOverLimit"));
+          return;
+        }
         const locale = getLocale();
         const dateText = new Date().toLocaleDateString(locale);
         const formatted = t("formatUseEntry", {
@@ -453,7 +517,7 @@
           afterHours: after,
         };
         saveRecord("use", -hr, note, "use", formatted, meta);
-        alert(t("useAlert", toHM(hr).text, toHM(after).text));
+        await showSuccess(t("useAlert", toHM(hr).text, toHM(after).text));
       }
       function saveRecord(
         type,
