@@ -181,27 +181,38 @@
     <div class="container py-4">
       <h1 class="fw-bold mb-2" data-i18n="heading">ตัวคิดเวลา OT</h1>
 
-      <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-        <label
-          class="switcher switcher--th"
-          id="languageSwitcher"
-          aria-label="ภาษา: ภาษาไทย"
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2">
+          <span class="form-label mb-0" data-i18n="languageLabel">ภาษา</span>
+          <label
+            class="switcher switcher--th"
+            id="languageSwitcher"
+            aria-label="ภาษา: ภาษาไทย"
+          >
+            <span class="visually-hidden" id="languageToggleText">ภาษาไทย</span>
+            <input
+              class="switcher-input"
+              type="checkbox"
+              id="languageToggle"
+            />
+            <span class="switcher-track">
+              <span class="switcher-thumb"></span>
+            </span>
+            <span
+              class="switcher-flag switcher-flag--th"
+              id="languageFlag"
+              aria-hidden="true"
+            ></span>
+          </label>
+        </div>
+        <button
+          type="button"
+          id="syncBtn"
+          class="btn btn-outline-secondary btn-sm"
+          data-i18n="syncBtn"
         >
-          <span class="visually-hidden" id="languageToggleText">ภาษาไทย</span>
-          <input
-            class="switcher-input"
-            type="checkbox"
-            id="languageToggle"
-          />
-          <span class="switcher-track">
-            <span class="switcher-thumb"></span>
-          </span>
-          <span
-            class="switcher-flag switcher-flag--th"
-            id="languageFlag"
-            aria-hidden="true"
-          ></span>
-        </label>
+          Sync Git
+        </button>
       </div>
 
       <div
@@ -357,6 +368,12 @@
           languageLabel: "ภาษา",
           langThai: "ภาษาไทย",
           langEnglish: "ภาษาอังกฤษ",
+          syncBtn: "ซิงก์ Git",
+          syncingTitle: "กำลังซิงก์...",
+          syncingMessage: "กำลังอัปเดต data.json ไปยัง Git",
+          syncSuccess: "ซิงก์ Git สำเร็จแล้ว",
+          syncNoChanges: "ไม่มีการเปลี่ยนแปลงใหม่ใน data.json",
+          syncError: "ซิงก์ Git ล้มเหลว",
           okBtn: "ตกลง",
           cancelBtn: "ยกเลิก",
           infoTitle: "แจ้งเตือน",
@@ -405,6 +422,12 @@
           languageLabel: "Language",
           langThai: "Thai",
           langEnglish: "English",
+          syncBtn: "Sync Git",
+          syncingTitle: "Syncing...",
+          syncingMessage: "Pushing data.json to Git",
+          syncSuccess: "Git sync completed",
+          syncNoChanges: "No new changes to push",
+          syncError: "Git sync failed",
           okBtn: "OK",
           cancelBtn: "Cancel",
           infoTitle: "Notice",
@@ -671,6 +694,42 @@
         saveRecord("use", -hr, note, "use", formatted, meta);
         await showSuccess(t("useAlert", toHM(hr).text, toHM(after).text));
       }
+      async function syncGit() {
+        const btn = document.getElementById("syncBtn");
+        if (btn) btn.disabled = true;
+        try {
+          Swal.fire({
+            title: t("syncingTitle"),
+            text: t("syncingMessage"),
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
+          const response = await fetch("/sync", { method: "POST" });
+          let data = {};
+          try {
+            data = await response.json();
+          } catch (err) {
+            console.error(err);
+          }
+          Swal.close();
+          if (!response.ok || data.error) {
+            throw new Error(data.details || data.error || "sync_failed");
+          }
+          if (data.message === "no_changes") {
+            await showInfo(t("syncNoChanges"));
+          } else {
+            await showSuccess(t("syncSuccess"));
+          }
+        } catch (err) {
+          Swal.close();
+          await showError(`${t("syncError")}${err?.message ? ` (${err.message})` : ""}`);
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      }
       function saveRecord(
         type,
         value,
@@ -781,6 +840,8 @@
       $("#calcBtn").addEventListener("click", calc);
       $("#resetBtn").addEventListener("click", resetData);
       $("#useBtn").addEventListener("click", useOT);
+      const syncBtn = $("#syncBtn");
+      if (syncBtn) syncBtn.addEventListener("click", syncGit);
       patchNativeAlerts();
       setupLanguageToggle();
       applyTranslations();
