@@ -20,14 +20,12 @@ npm install express
 ให้สิทธิ์รันไฟล์ .sh (ทำครั้งแรกครั้งเดียว):
 
 ```bash
-Copy code
 chmod +x run-ot.sh
 ```
 
 จากนั้นรันโปรแกรมด้วยคำสั่ง:
 
 ```bash
-Copy code
 ./run-ot.sh
 ```
 
@@ -39,7 +37,6 @@ Copy code
 
 โครงสร้างไฟล์หลักของโปรเจกต์
 ```bash
-Copy code
 ot-tracker/
 ├─ run-ot.sh        # สคริปต์สำหรับรันโปรแกรม
 ├─ server.js        # ไฟล์เซิร์ฟเวอร์ Node.js (Express)
