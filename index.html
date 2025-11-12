@@ -221,23 +221,43 @@
         const [h, m] = t.split(":").map(Number);
         return h * 60 + m;
       };
+      const LUNCH_START = parseTime("12:00");
+      const LUNCH_END = parseTime("13:00");
+      // Remove 12:00-13:00 lunch window from a working interval.
+      const splitLunch = (start, end) => {
+        if (end <= start) return [];
+        if (end <= LUNCH_START || start >= LUNCH_END) return [[start, end]];
+        const segments = [];
+        if (start < LUNCH_START)
+          segments.push([start, Math.min(end, LUNCH_START)]);
+        if (end > LUNCH_END)
+          segments.push([Math.max(start, LUNCH_END), end]);
+        return segments.filter(([segStart, segEnd]) => segEnd > segStart);
+      };
       const parseHHMM = (t) => {
         if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(t)) return null;
         const [h, m] = t.split(":").map(Number);
         return h * 60 + m;
       };
       function calcWeighted(type, s, e) {
-        const dur = e - s;
         const b = parseTime("17:00");
-        let w = 0;
-        if (type === "weekday") w = dur * 1.5;
-        else if (type === "holiday") w = dur * 2;
-        else {
-          if (e <= b) w = dur;
-          else if (s >= b) w = dur * 1.5;
-          else w = (b - s) * 1 + (e - b) * 1.5;
-        }
-        return { weightedMin: w, duration: dur };
+        const segments = splitLunch(s, e);
+        let weightedMin = 0;
+        let duration = 0;
+        segments.forEach(([segStart, segEnd]) => {
+          const segDur = segEnd - segStart;
+          duration += segDur;
+          if (type === "weekday") weightedMin += segDur * 1.5;
+          else if (type === "holiday") weightedMin += segDur * 2;
+          else {
+            if (segEnd <= b) weightedMin += segDur;
+            else if (segStart >= b) weightedMin += segDur * 1.5;
+            else
+              weightedMin +=
+                (b - segStart) * 1 + (segEnd - b) * 1.5;
+          }
+        });
+        return { weightedMin, duration };
       }
       async function loadData() {
         const r = await fetch("/load");
