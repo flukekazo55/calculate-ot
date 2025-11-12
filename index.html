@@ -94,6 +94,61 @@
       .mono {
         font-family: "Courier New", monospace;
       }
+      .language-switcher {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .switcher {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        cursor: pointer;
+        user-select: none;
+      }
+      .switcher-input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switcher-track {
+        width: 58px;
+        height: 28px;
+        border-radius: 999px;
+        background: #b5b5b5;
+        display: inline-flex;
+        align-items: center;
+        padding: 3px;
+        transition: background 0.25s ease, box-shadow 0.25s ease;
+      }
+      .switcher-thumb {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        transition: transform 0.25s ease;
+      }
+      .switcher-input:checked + .switcher-track .switcher-thumb {
+        transform: translateX(30px);
+      }
+      .switcher-text {
+        min-width: 30px;
+        text-align: right;
+        font-weight: 600;
+        color: var(--tbv-text);
+      }
+      .switcher--th .switcher-track {
+        background: var(--tbv-green);
+      }
+      .switcher--en .switcher-track {
+        background: var(--tbv-gold);
+      }
+      .switcher--focus .switcher-track {
+        box-shadow: 0 0 0 3px rgba(0, 99, 65, 0.25);
+      }
     </style>
   </head>
   <body>
@@ -101,22 +156,17 @@
       <h1 class="fw-bold mb-2" data-i18n="heading">ตัวคิดเวลา OT</h1>
 
       <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-        <span class="form-label mb-0" data-i18n="languageLabel">ภาษา</span>
-        <div class="form-check form-switch m-0">
+        <label class="switcher switcher--th" id="languageSwitcher">
           <input
-            class="form-check-input"
+            class="switcher-input"
             type="checkbox"
-            role="switch"
             id="languageToggle"
           />
-          <label
-            class="form-check-label fw-semibold"
-            for="languageToggle"
-            id="languageToggleLabel"
-          >
-            TH
-          </label>
-        </div>
+          <span class="switcher-track">
+            <span class="switcher-thumb"></span>
+          </span>
+          <span class="switcher-text" id="languageToggleLabel">TH</span>
+        </label>
       </div>
 
       <div
@@ -241,6 +291,7 @@
       </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-3fpdpA9zKp1tcHTfb3e8DqnuM2J7l28anvf5Q0Mujr0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       const localeMap = { th: "th-TH", en: "en-US" };
@@ -341,6 +392,7 @@
 
       let currentLang = localStorage.getItem("otLang") || "th";
       if (!translations[currentLang]) currentLang = "th";
+      const jq = window.jQuery || null;
 
       const $ = (s) => document.querySelector(s);
       const toHM = (h, lang = currentLang) => {
@@ -422,22 +474,38 @@
           console.log("console.alert override not supported.");
         }
       }
-      function setupLanguageToggle() {
-        const toggle = $("#languageToggle");
+      function updateLanguageToggleUI() {
+        const toggle = document.getElementById("languageToggle");
+        const label = document.getElementById("languageToggleLabel");
+        const wrapper = document.getElementById("languageSwitcher");
         if (!toggle) return;
-        const label = $("#languageToggleLabel");
-        const syncLabel = () => {
-          if (label) label.textContent = toggle.checked ? "EN" : "TH";
-        };
+        const isEn = toggle.checked;
+        if (label) label.textContent = isEn ? "EN" : "TH";
+        if (wrapper) {
+          wrapper.classList.toggle("switcher--en", isEn);
+          wrapper.classList.toggle("switcher--th", !isEn);
+          wrapper.classList.toggle("switcher--focus", toggle === document.activeElement);
+          if (jq) jq(wrapper).toggleClass("is-checked", isEn);
+        }
+      }
+      function setupLanguageToggle() {
+        const toggle = document.getElementById("languageToggle");
+        if (!toggle) return;
         toggle.checked = currentLang === "en";
-        syncLabel();
+        updateLanguageToggleUI();
         toggle.addEventListener("change", (event) => {
           const nextLang = event.target.checked ? "en" : "th";
           currentLang = translations[nextLang] ? nextLang : "th";
           localStorage.setItem("otLang", currentLang);
-          syncLabel();
+          updateLanguageToggleUI();
           applyTranslations();
         });
+        toggle.addEventListener("focus", () =>
+          document.getElementById("languageSwitcher")?.classList.add("switcher--focus")
+        );
+        toggle.addEventListener("blur", () =>
+          document.getElementById("languageSwitcher")?.classList.remove("switcher--focus")
+        );
       }
       async function confirmAction({
         titleKey = "confirmResetTitle",
@@ -651,11 +719,10 @@
             if (typeof value === "string")
               node.setAttribute("placeholder", value);
           });
-        const toggle = $("#languageToggle");
+        const toggle = document.getElementById("languageToggle");
         if (toggle) {
           toggle.checked = currentLang === "en";
-          const label = $("#languageToggleLabel");
-          if (label) label.textContent = toggle.checked ? "EN" : "TH";
+          updateLanguageToggleUI();
         }
         const initVisible = $("#initBalance")?.style.display === "block";
         renderSummary(initVisible);
