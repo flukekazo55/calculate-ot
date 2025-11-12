@@ -94,6 +94,16 @@
       .mono {
         font-family: "Courier New", monospace;
       }
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
       .language-switcher {
         display: flex;
         align-items: center;
@@ -140,6 +150,22 @@
         font-weight: 600;
         color: var(--tbv-text);
       }
+      .switcher-flag {
+        width: 36px;
+        height: 22px;
+        border-radius: 4px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+      .switcher-flag--th {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA2MCAzNic+PHJlY3Qgd2lkdGg9JzYwJyBoZWlnaHQ9JzM2JyBmaWxsPScjQTUxOTMxJy8+PHJlY3QgeT0nNicgd2lkdGg9JzYwJyBoZWlnaHQ9JzI0JyBmaWxsPScjRkZGRkZGJy8+PHJlY3QgeT0nMTInIHdpZHRoPSc2MCcgaGVpZ2h0PScxMicgZmlsbD0nIzJEMkE0QScvPjwvc3ZnPg==");
+      }
+      .switcher-flag--en {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA2MCAzMCc+PHBhdGggZD0nTTAgMGg2MHYzMEgweicgZmlsbD0nIzAxMjE2OScvPjxwYXRoIGQ9J00wIDBsNjAgMzBNNjAgMEwwIDMwJyBzdHJva2U9JyNGRkZGRkYnIHN0cm9rZS13aWR0aD0nNicvPjxwYXRoIGQ9J00wIDBsNjAgMzBNNjAgMEwwIDMwJyBzdHJva2U9JyNDODEwMkUnIHN0cm9rZS13aWR0aD0nNCcvPjxwYXRoIGQ9J00zMCAwdjMwTTAgMTVoNjAnIHN0cm9rZT0nI0ZGRkZGRicgc3Ryb2tlLXdpZHRoPSc4Jy8+PHBhdGggZD0nTTMwIDB2MzBNMCAxNWg2MCcgc3Ryb2tlPScjQzgxMDJFJyBzdHJva2Utd2lkdGg9JzQnLz48L3N2Zz4=");
+      }
       .switcher--th .switcher-track {
         background: var(--tbv-green);
       }
@@ -156,7 +182,12 @@
       <h1 class="fw-bold mb-2" data-i18n="heading">ตัวคิดเวลา OT</h1>
 
       <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
-        <label class="switcher switcher--th" id="languageSwitcher">
+        <label
+          class="switcher switcher--th"
+          id="languageSwitcher"
+          aria-label="ภาษา: ภาษาไทย"
+        >
+          <span class="visually-hidden" id="languageToggleText">ภาษาไทย</span>
           <input
             class="switcher-input"
             type="checkbox"
@@ -165,7 +196,11 @@
           <span class="switcher-track">
             <span class="switcher-thumb"></span>
           </span>
-          <span class="switcher-text" id="languageToggleLabel">TH</span>
+          <span
+            class="switcher-flag switcher-flag--th"
+            id="languageFlag"
+            aria-hidden="true"
+          ></span>
         </label>
       </div>
 
@@ -320,6 +355,8 @@
           grandTotalLabel: "รวมทั้งหมด",
           initBalanceLabel: "ยอด OT ปัจจุบันทั้งหมด",
           languageLabel: "ภาษา",
+          langThai: "ภาษาไทย",
+          langEnglish: "ภาษาอังกฤษ",
           okBtn: "ตกลง",
           cancelBtn: "ยกเลิก",
           infoTitle: "แจ้งเตือน",
@@ -366,6 +403,8 @@
           grandTotalLabel: "Total",
           initBalanceLabel: "Current OT Balance",
           languageLabel: "Language",
+          langThai: "Thai",
+          langEnglish: "English",
           okBtn: "OK",
           cancelBtn: "Cancel",
           infoTitle: "Notice",
@@ -476,15 +515,27 @@
       }
       function updateLanguageToggleUI() {
         const toggle = document.getElementById("languageToggle");
-        const label = document.getElementById("languageToggleLabel");
         const wrapper = document.getElementById("languageSwitcher");
+        const flag = document.getElementById("languageFlag");
+        const textEl = document.getElementById("languageToggleText");
         if (!toggle) return;
         const isEn = toggle.checked;
-        if (label) label.textContent = isEn ? "EN" : "TH";
+        const langName = isEn ? t("langEnglish") : t("langThai");
+        if (flag) {
+          flag.classList.toggle("switcher-flag--en", isEn);
+          flag.classList.toggle("switcher-flag--th", !isEn);
+        }
+        if (textEl) {
+          textEl.textContent = langName;
+        }
         if (wrapper) {
           wrapper.classList.toggle("switcher--en", isEn);
           wrapper.classList.toggle("switcher--th", !isEn);
           wrapper.classList.toggle("switcher--focus", toggle === document.activeElement);
+          wrapper.setAttribute(
+            "aria-label",
+            `${t("languageLabel")}: ${langName}`
+          );
           if (jq) jq(wrapper).toggleClass("is-checked", isEn);
         }
       }
