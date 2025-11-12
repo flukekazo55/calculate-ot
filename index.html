@@ -98,7 +98,25 @@
   </head>
   <body>
     <div class="container py-4">
-      <h1 class="fw-bold mb-2">ตัวคิดเวลา OT</h1>
+      <h1 class="fw-bold mb-2" data-i18n="heading">ตัวคิดเวลา OT</h1>
+
+      <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+        <label
+          for="languageSelect"
+          class="form-label mb-0"
+          data-i18n="languageLabel"
+        >
+          ภาษา
+        </label>
+        <select
+          id="languageSelect"
+          class="form-select form-select-sm"
+          style="max-width: 160px"
+        >
+          <option value="th">ไทย (TH)</option>
+          <option value="en">English (EN)</option>
+        </select>
+      </div>
 
       <div
         class="alert alert-info"
@@ -111,27 +129,34 @@
         <div class="col-12 col-lg-6">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="fw-bold">บันทึก OT</h5>
+              <h5 class="fw-bold" data-i18n="calcCardTitle">บันทึก OT</h5>
               <div class="row g-3 mt-1">
                 <div class="col-md-6">
-                  <label class="form-label">ประเภทวัน</label>
+                  <label class="form-label" data-i18n="dayTypeLabel">ประเภทวัน</label>
                   <select id="dayType" class="form-select">
-                    <option value="weekday">วันธรรมดา (จ.-ศ.)</option>
-                    <option value="weekend">เสาร์ / อาทิตย์</option>
-                    <option value="holiday">วันหยุดพิเศษ</option>
+                    <option value="weekday" data-i18n="dayType.weekday">
+                      วันธรรมดา (จ.-ศ.)
+                    </option>
+                    <option value="weekend" data-i18n="dayType.weekend">
+                      เสาร์ / อาทิตย์
+                    </option>
+                    <option value="holiday" data-i18n="dayType.holiday">
+                      วันหยุดพิเศษ
+                    </option>
                   </select>
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">กิจกรรม</label>
+                  <label class="form-label" data-i18n="activityLabel">กิจกรรม</label>
                   <input
                     id="activity"
                     type="text"
                     class="form-control"
                     placeholder="เช่น แก้ระบบหลังบ้าน"
+                    data-i18n-placeholder="activityPlaceholder"
                   />
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">เริ่ม (24 ชม.)</label>
+                  <label class="form-label" data-i18n="startLabel">เริ่ม (24 ชม.)</label>
                   <input
                     id="startTime"
                     type="text"
@@ -140,7 +165,7 @@
                   />
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">สิ้นสุด (24 ชม.)</label>
+                  <label class="form-label" data-i18n="endLabel">สิ้นสุด (24 ชม.)</label>
                   <input
                     id="endTime"
                     type="text"
@@ -150,10 +175,10 @@
                 </div>
               </div>
               <div class="d-flex gap-2 mt-3">
-                <button id="calcBtn" class="btn btn-accent">
+                <button id="calcBtn" class="btn btn-accent" data-i18n="calcBtn">
                   คำนวณ & บันทึก
                 </button>
-                <button id="resetBtn" class="btn btn-danger">
+                <button id="resetBtn" class="btn btn-danger" data-i18n="resetBtn">
                   ล้างข้อมูลทั้งหมด
                 </button>
               </div>
@@ -165,28 +190,34 @@
         <div class="col-12 col-lg-6">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="fw-bold">ใช้ OT</h5>
+              <h5 class="fw-bold" data-i18n="useCardTitle">ใช้ OT</h5>
               <div class="row g-3">
                 <div class="col-md-6">
-                  <label class="form-label">เวลาที่ใช้ (hh:mm)</label>
+                  <label class="form-label" data-i18n="useTimeLabel">เวลาที่ใช้ (hh:mm)</label>
                   <input
                     id="useTime"
                     type="text"
                     class="form-control"
                     placeholder="เช่น 02:30"
+                    data-i18n-placeholder="useTimePlaceholder"
                   />
                 </div>
                 <div class="col-md-6">
-                  <label class="form-label">หมายเหตุ</label>
+                  <label class="form-label" data-i18n="useNoteLabel">หมายเหตุ</label>
                   <input
                     id="useNote"
                     type="text"
                     class="form-control"
                     placeholder="เช่น ใช้ชดเชย #Leave"
+                    data-i18n-placeholder="useNotePlaceholder"
                   />
                 </div>
               </div>
-              <button id="useBtn" class="btn btn-accent mt-3">
+              <button
+                id="useBtn"
+                class="btn btn-accent mt-3"
+                data-i18n="useBtn"
+              >
                 บันทึกการใช้ OT
               </button>
             </div>
@@ -197,7 +228,7 @@
         <div class="col-12">
           <div class="card">
             <div class="card-body">
-              <h5 class="fw-bold">ประวัติทั้งหมด</h5>
+              <h5 class="fw-bold" data-i18n="historyTitle">ประวัติทั้งหมด</h5>
               <div id="summaryList" class="mono text-muted"></div>
               <hr class="border-secondary" />
               <div id="grandTotal" class="fs-5 fw-bold">
@@ -210,12 +241,102 @@
     </div>
 
     <script>
+      const localeMap = { th: "th-TH", en: "en-US" };
+      const translations = {
+        th: {
+          appTitle: "Calculate OT (V1.0)",
+          heading: "ตัวคิดเวลา OT",
+          calcCardTitle: "บันทึก OT",
+          dayTypeLabel: "ประเภทวัน",
+          "dayType.weekday": "วันธรรมดา (จ.-ศ.)",
+          "dayType.weekend": "เสาร์ / อาทิตย์",
+          "dayType.holiday": "วันหยุดพิเศษ",
+          activityLabel: "กิจกรรม",
+          activityPlaceholder: "เช่น แก้ระบบหลังบ้าน",
+          startLabel: "เริ่ม (24 ชม.)",
+          endLabel: "สิ้นสุด (24 ชม.)",
+          calcBtn: "คำนวณ & บันทึก",
+          resetBtn: "ล้างข้อมูลทั้งหมด",
+          useCardTitle: "ใช้ OT",
+          useTimeLabel: "เวลาที่ใช้ (hh:mm)",
+          useTimePlaceholder: "เช่น 02:30",
+          useNoteLabel: "หมายเหตุ",
+          useNotePlaceholder: "เช่น ใช้ชดเชย #Leave",
+          useBtn: "บันทึกการใช้ OT",
+          historyTitle: "ประวัติทั้งหมด",
+          grandTotalLabel: "รวมทั้งหมด",
+          initBalanceLabel: "ยอด OT ปัจจุบันทั้งหมด",
+          languageLabel: "ภาษา",
+          defaultActivity: "ไม่ระบุ",
+          useDefaultNote: "ใช้ OT",
+          confirmReset: "ล้างข้อมูลทั้งหมด?",
+          calcInvalidRange: "เวลาสิ้นสุดต้องมากกว่าเวลาเริ่ม",
+          calcSuccess: (activity, durationText) =>
+            `บันทึกสำเร็จ: ${activity} (${durationText})`,
+          useInvalidFormat: "กรอกเวลาแบบ hh:mm เช่น 02:30",
+          useOverLimit: "❌ ใช้ OT เกินยอดที่มีอยู่!",
+          useAlert: (usedText, remainText) =>
+            `ใช้ OT ไป ${usedText}, เหลือ ${remainText}`,
+          formatUseEntry: ({ note, dateText, usedText, beforeText, afterText }) =>
+            `[${note}] วันที่ ${dateText} [ใช้ ${usedText}] ใช้วันหยุด OT จาก [${beforeText}] เหลือ [${afterText}] #Leave`,
+          hourUnit: "ชั่วโมง",
+          minuteUnit: "นาที",
+        },
+        en: {
+          appTitle: "Calculate OT (V1.0)",
+          heading: "Calculate OT",
+          calcCardTitle: "Add OT Entry",
+          dayTypeLabel: "Day Type",
+          "dayType.weekday": "Weekday (Mon-Fri)",
+          "dayType.weekend": "Weekend / Day Off",
+          "dayType.holiday": "Holiday",
+          activityLabel: "Activity",
+          activityPlaceholder: "e.g., Fix back office system",
+          startLabel: "Start (24h)",
+          endLabel: "End (24h)",
+          calcBtn: "Calculate & Save",
+          resetBtn: "Clear All",
+          useCardTitle: "Use OT",
+          useTimeLabel: "Time to use (hh:mm)",
+          useTimePlaceholder: "e.g., 02:30",
+          useNoteLabel: "Note",
+          useNotePlaceholder: "e.g., Offset #Leave",
+          useBtn: "Save OT Usage",
+          historyTitle: "Full History",
+          grandTotalLabel: "Total",
+          initBalanceLabel: "Current OT Balance",
+          languageLabel: "Language",
+          defaultActivity: "Unspecified",
+          useDefaultNote: "Use OT",
+          confirmReset: "Clear every record?",
+          calcInvalidRange: "End time must be later than start time",
+          calcSuccess: (activity, durationText) =>
+            `Saved successfully: ${activity} (${durationText})`,
+          useInvalidFormat: "Enter time as hh:mm, e.g., 02:30",
+          useOverLimit: "❌ You cannot use more OT than you have!",
+          useAlert: (usedText, remainText) =>
+            `Used OT ${usedText}, remaining ${remainText}`,
+          formatUseEntry: ({ note, dateText, usedText, beforeText, afterText }) =>
+            `[${note}] Date ${dateText} [Used ${usedText}] OT bank from [${beforeText}] left [${afterText}] #Leave`,
+          hourUnit: "hours",
+          minuteUnit: "minutes",
+        },
+      };
+
+      let currentLang = localStorage.getItem("otLang") || "th";
+      if (!translations[currentLang]) currentLang = "th";
+
       const $ = (s) => document.querySelector(s);
-      const toHM = (h) => {
-        const t = Math.round(h * 60);
-        const H = Math.floor(t / 60);
-        const M = t % 60;
-        return { H, M, text: `${H} ชั่วโมง ${M} นาที` };
+      const toHM = (h, lang = currentLang) => {
+        const pack = translations[lang] || translations.th;
+        const totalMinutes = Math.max(0, Math.round(Math.abs(h) * 60));
+        const H = Math.floor(totalMinutes / 60);
+        const M = totalMinutes % 60;
+        return {
+          H,
+          M,
+          text: `${H} ${pack.hourUnit} ${M} ${pack.minuteUnit}`,
+        };
       };
       const parseTime = (t) => {
         const [h, m] = t.split(":").map(Number);
@@ -239,14 +360,20 @@
         const [h, m] = t.split(":").map(Number);
         return h * 60 + m;
       };
+      const getLocale = (lang = currentLang) =>
+        localeMap[lang] || localeMap.en;
+      const t = (key, ...args) => {
+        const pack = translations[currentLang] || translations.th;
+        const value = pack[key];
+        if (typeof value === "function") return value(...args);
+        return value ?? key;
+      };
       function calcWeighted(type, s, e) {
         const b = parseTime("17:00");
         const segments = splitLunch(s, e);
         let weightedMin = 0;
-        let duration = 0;
         segments.forEach(([segStart, segEnd]) => {
           const segDur = segEnd - segStart;
-          duration += segDur;
           if (type === "weekday") weightedMin += segDur * 1.5;
           else if (type === "holiday") weightedMin += segDur * 2;
           else {
@@ -257,7 +384,7 @@
                 (b - segStart) * 1 + (segEnd - b) * 1.5;
           }
         });
-        return { weightedMin, duration };
+        return { weightedMin };
       }
       async function loadData() {
         const r = await fetch("/load");
@@ -269,7 +396,7 @@
       async function saveData() {
         const data = {
           records: JSON.parse(localStorage.getItem("otRecords") || "[]"),
-          lastUpdate: new Date().toLocaleString("th-TH"),
+          lastUpdate: new Date().toLocaleString(getLocale()),
         };
         await fetch("/save", {
           method: "POST",
@@ -278,84 +405,174 @@
         });
       }
       async function resetData() {
-        if (confirm("ล้างข้อมูลทั้งหมด?")) {
+        if (confirm(t("confirmReset"))) {
           await fetch("/reset", { method: "POST" });
           localStorage.clear();
           renderSummary();
         }
       }
       function calc() {
-        const type = $("#dayType").value,
-          act = $("#activity").value || "ไม่ระบุ";
-        const s = parseTime($("#startTime").value),
-          e = parseTime($("#endTime").value);
-        if (e <= s) return alert("เวลาสิ้นสุดต้องมากกว่าเวลาเริ่ม");
+        const type = $("#dayType").value;
+        const actInput = $("#activity");
+        const act =
+          (actInput?.value || "").trim() || t("defaultActivity");
+        const s = parseTime($("#startTime").value);
+        const e = parseTime($("#endTime").value);
+        if (e <= s) return alert(t("calcInvalidRange"));
         const { weightedMin } = calcWeighted(type, s, e);
-        saveRecord("earn", weightedMin / 60, act, type);
-        alert(`บันทึกสำเร็จ: ${act} (${toHM(weightedMin / 60).text})`);
+        const earnedHours = weightedMin / 60;
+        saveRecord("earn", earnedHours, act, type);
+        alert(t("calcSuccess", act, toHM(earnedHours).text));
       }
       function useOT() {
-        const timeText = $("#useTime").value.trim();
+        const timeText = ($("#useTime").value || "").trim();
         const min = parseHHMM(timeText);
-        if (min === null) return alert("กรอกเวลาแบบ hh:mm เช่น 02:30");
+        if (min === null) return alert(t("useInvalidFormat"));
         const hr = min / 60;
-        const note = $("#useNote").value || "ใช้ OT";
+        const note =
+          ($("#useNote").value || "").trim() || t("useDefaultNote");
         const list = JSON.parse(localStorage.getItem("otRecords") || "[]");
-        const before = list.reduce((a, b) => a + b.value, 0),
-          after = before - hr;
-        if (after < 0) return alert("❌ ใช้ OT เกินยอดที่มีอยู่!");
-        const formatted = `[${note}] วันที่ ${new Date().toLocaleDateString(
-          "th-TH"
-        )} [ใช้ ${toHM(hr).text}] ใช้วันหยุด OT จาก [${
-          toHM(before).text
-        }] เหลือ [${toHM(after).text}] #Leave`;
-        saveRecord("use", -hr, note, "use", formatted);
-        alert(`ใช้ OT ไป ${toHM(hr).text}, เหลือ ${toHM(after).text}`);
+        const before = list.reduce(
+          (a, b) => a + Number(b.value || 0),
+          0
+        );
+        const after = before - hr;
+        if (after < 0) return alert(t("useOverLimit"));
+        const locale = getLocale();
+        const dateText = new Date().toLocaleDateString(locale);
+        const formatted = t("formatUseEntry", {
+          note,
+          dateText,
+          usedText: toHM(hr).text,
+          beforeText: toHM(before).text,
+          afterText: toHM(after).text,
+        });
+        const meta = {
+          spentHours: hr,
+          beforeHours: before,
+          afterHours: after,
+        };
+        saveRecord("use", -hr, note, "use", formatted, meta);
+        alert(t("useAlert", toHM(hr).text, toHM(after).text));
       }
-      function saveRecord(type, value, activity, dayType, formatted = "") {
+      function saveRecord(
+        type,
+        value,
+        activity,
+        dayType,
+        formatted = "",
+        meta = null
+      ) {
         const list = JSON.parse(localStorage.getItem("otRecords") || "[]");
-        list.push({
-          id: Date.now(),
-          date: new Date().toLocaleDateString("th-TH"),
+        const timestamp = Date.now();
+        const locale = getLocale();
+        const record = {
+          id: timestamp,
+          timestamp,
+          date: new Date(timestamp).toLocaleDateString(locale),
           type,
           activity,
           dayType,
           value,
-          formatted,
-        });
+        };
+        if (formatted) record.formatted = formatted;
+        if (meta && Object.keys(meta).length) record.meta = meta;
+        list.push(record);
         localStorage.setItem("otRecords", JSON.stringify(list));
         localStorage.setItem(
           "otLastUpdate",
-          new Date().toLocaleString("th-TH")
+          new Date().toLocaleString(locale)
         );
         saveData();
         renderSummary();
       }
+      function formatRecordDate(record) {
+        if (record?.timestamp)
+          return new Date(record.timestamp).toLocaleDateString(
+            getLocale()
+          );
+        return record?.date || "-";
+      }
+      function formatUseSummary(record) {
+        const dateText = formatRecordDate(record);
+        const meta = record.meta;
+        if (meta && typeof meta.spentHours === "number") {
+          return t("formatUseEntry", {
+            note: record.activity,
+            dateText,
+            usedText: toHM(meta.spentHours).text,
+            beforeText: toHM(meta.beforeHours || 0).text,
+            afterText: toHM(meta.afterHours || 0).text,
+          });
+        }
+        return record.formatted || record.activity || "";
+      }
       function renderSummary(showInit = false) {
         const list = JSON.parse(localStorage.getItem("otRecords") || "[]");
-        const s = $("#summaryList");
-        s.innerHTML = "";
+        const summary = $("#summaryList");
+        if (!summary) return;
+        summary.innerHTML = "";
         let total = 0;
         list.forEach((r, i) => {
-          total += r.value;
+          total += Number(r.value || 0);
           const div = document.createElement("div");
           div.textContent =
             r.type === "use"
-              ? r.formatted
-              : `${i + 1}. [${r.date}] ${r.activity} → ${toHM(r.value).text}`;
-          s.appendChild(div);
+              ? formatUseSummary(r)
+              : `${i + 1}. [${formatRecordDate(r)}] ${r.activity} → ${
+                  toHM(r.value).text
+                }`;
+          summary.appendChild(div);
         });
-        const t = toHM(total);
-        $("#grandTotal").textContent = `รวมทั้งหมด: ${t.text}`;
-        if (showInit) {
-          const box = $("#initBalance");
-          box.textContent = `ยอด OT ปัจจุบันทั้งหมด: ${t.text}`;
-          box.style.display = "block";
+        const totalText = toHM(total).text;
+        const totalBox = $("#grandTotal");
+        if (totalBox)
+          totalBox.textContent = `${t("grandTotalLabel")}: ${totalText}`;
+        const initBox = $("#initBalance");
+        if (initBox) {
+          const shouldShow =
+            showInit || initBox.style.display === "block";
+          if (shouldShow) {
+            initBox.textContent = `${t("initBalanceLabel")}: ${totalText}`;
+            initBox.style.display = "block";
+          }
         }
+      }
+      function applyTranslations() {
+        document.documentElement.lang = currentLang;
+        document.title = t("appTitle");
+        document.querySelectorAll("[data-i18n]").forEach((node) => {
+          const key = node.getAttribute("data-i18n");
+          const value = t(key);
+          if (typeof value === "string") node.textContent = value;
+        });
+        document
+          .querySelectorAll("[data-i18n-placeholder]")
+          .forEach((node) => {
+            const key = node.getAttribute("data-i18n-placeholder");
+            const value = t(key);
+            if (typeof value === "string")
+              node.setAttribute("placeholder", value);
+          });
+        const initVisible = $("#initBalance")?.style.display === "block";
+        renderSummary(initVisible);
+      }
+      function setupLanguageSelector() {
+        const select = $("#languageSelect");
+        if (!select) return;
+        select.value = currentLang;
+        select.addEventListener("change", (event) => {
+          const nextLang = event.target.value;
+          currentLang = translations[nextLang] ? nextLang : "th";
+          localStorage.setItem("otLang", currentLang);
+          applyTranslations();
+        });
       }
       $("#calcBtn").addEventListener("click", calc);
       $("#resetBtn").addEventListener("click", resetData);
       $("#useBtn").addEventListener("click", useOT);
+      setupLanguageSelector();
+      applyTranslations();
       loadData();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
