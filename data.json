@@ -1,14 +1,4 @@
 {
-  "records": [
-    {
-      "id": 1763023643787,
-      "timestamp": 1763023643787,
-      "date": "13/11/2568",
-      "type": "earn",
-      "activity": "Backup OT",
-      "dayType": "weekend",
-      "value": 24
-    }
-  ],
-  "lastUpdate": "13/11/2568 15:47:23"
+  "records": [],
+  "lastUpdate": ""
 }
