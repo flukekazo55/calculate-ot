@@ -8,7 +8,22 @@
       "activity": "Backup OT",
       "dayType": "weekend",
       "value": 24
+    },
+    {
+      "id": 1763700051216,
+      "timestamp": 1763700051216,
+      "date": "21/11/2568",
+      "type": "use",
+      "activity": "ทำธุระ",
+      "dayType": "use",
+      "value": -2,
+      "formatted": "[ทำธุระ] วันที่ 21/11/2568 [ใช้ 2 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [24 ชั่วโมง 0 นาที] เหลือ [22 ชั่วโมง 0 นาที] #Leave",
+      "meta": {
+        "spentHours": 2,
+        "beforeHours": 24,
+        "afterHours": 22
+      }
     }
   ],
-  "lastUpdate": "13/11/2568 15:47:23"
+  "lastUpdate": "21/11/2568 11:40:51"
 }
