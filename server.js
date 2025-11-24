@@ -10,6 +10,26 @@ const PORT = 3000;
 const DATA_FILE = path.join(__dirname, "data.json");
 const DEFAULT_DATA = { records: [], lastUpdate: "" };
 const execAsync = util.promisify(exec);
+const gitOpts = { cwd: __dirname };
+
+async function abortMergeStates() {
+  // Best-effort cleanup so a previous failed merge/rebase does not block sync.
+  try {
+    await execAsync("git merge --abort", gitOpts);
+  } catch {}
+  try {
+    await execAsync("git rebase --abort", gitOpts);
+  } catch {}
+}
+
+async function isAheadOfRemote() {
+  try {
+    const { stdout } = await execAsync("git status --short --branch", gitOpts);
+    return /\bahead\s+\d+/i.test(stdout);
+  } catch {
+    return false;
+  }
+}
 
 function ensureDataFile() {
   if (!fs.existsSync(DATA_FILE)) {
@@ -63,27 +83,13 @@ app.post("/reset", (req, res) => {
 app.post("/sync", async (req, res) => {
   try {
     ensureDataFile();
+    await abortMergeStates();
     let pullOutput = "";
     let pushOutput = "";
     let commitOutput = "";
     let pulledUpdates = false;
-    await execAsync("git add data.json", { cwd: __dirname });
-    const timestamp = new Date().toISOString().replace("T", " ").split(".")[0];
-    let committed = false;
     try {
-      const { stdout } = await execAsync(`git commit -m "[SYNC]: data.json ${timestamp}"`, {
-        cwd: __dirname,
-      });
-      commitOutput = stdout;
-      committed = true;
-    } catch (err) {
-      const stderr = (err && err.stderr) || "";
-      if (!/nothing to commit|no changes added to commit/i.test(stderr)) {
-        throw err;
-      }
-    }
-    try {
-      const { stdout, stderr } = await execAsync("git pull --rebase", { cwd: __dirname });
+      const { stdout, stderr } = await execAsync("git pull --rebase --autostash", gitOpts);
       pullOutput = `${stdout || ""}${stderr || ""}`.trim();
       if (pullOutput && !/up to date/i.test(pullOutput)) {
         pulledUpdates = true;
@@ -93,11 +99,29 @@ app.post("/sync", async (req, res) => {
       if (/up to date/i.test(pullMessage)) {
         pullOutput = pullMessage;
       } else {
+        await abortMergeStates();
         throw err;
       }
     }
-    const { stdout: pushStdout, stderr: pushStderr } = await execAsync("git push", { cwd: __dirname });
-    pushOutput = `${pushStdout || ""}${pushStderr || ""}`.trim();
+    await execAsync("git add data.json", gitOpts);
+    const timestamp = new Date().toISOString().replace("T", " ").split(".")[0];
+    let committed = false;
+    try {
+      const { stdout } = await execAsync(`git commit -m "[SYNC]: data.json ${timestamp}"`, gitOpts);
+      commitOutput = stdout;
+      committed = true;
+    } catch (err) {
+      const stderr = (err && (err.stderr || err.stdout)) || "";
+      if (!/nothing to commit|no changes added to commit/i.test(stderr)) {
+        await abortMergeStates();
+        throw err;
+      }
+    }
+    const shouldPush = committed || (await isAheadOfRemote());
+    if (shouldPush) {
+      const { stdout: pushStdout, stderr: pushStderr } = await execAsync("git push", gitOpts);
+      pushOutput = `${pushStdout || ""}${pushStderr || ""}`.trim();
+    }
     const latestData = readDataFile();
     const responsePayload = {
       message: committed ? "synced" : pulledUpdates ? "pulled" : "no_changes",
@@ -110,6 +134,7 @@ app.post("/sync", async (req, res) => {
     }
     return res.json(responsePayload);
   } catch (err) {
+    await abortMergeStates();
     res
       .status(500)
       .json({ error: "sync_failed", details: err.stderr || err.stdout || err.message || "Unknown error" });
