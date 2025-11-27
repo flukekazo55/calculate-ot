@@ -758,12 +758,13 @@
         meta = null
       ) {
         const list = JSON.parse(localStorage.getItem("otRecords") || "[]");
-        const timestamp = Date.now();
         const locale = getLocale();
+        const now = new Date();
+        const recordId = now.getTime();
+        const recordDate = now.toLocaleDateString(locale);
         const record = {
-          id: timestamp,
-          timestamp,
-          date: new Date(timestamp).toLocaleDateString(locale),
+          id: recordId,
+          date: recordDate,
           type,
           activity,
           dayType,
@@ -781,11 +782,13 @@
         renderSummary();
       }
       function formatRecordDate(record) {
-        if (record?.timestamp)
+        if (!record) return "-";
+        if (record.date) return record.date;
+        if (record.timestamp)
           return new Date(record.timestamp).toLocaleDateString(
             getLocale()
           );
-        return record?.date || "-";
+        return "-";
       }
       function formatUseSummary(record) {
         const dateText = formatRecordDate(record);
@@ -810,12 +813,20 @@
         list.forEach((r, i) => {
           total += Number(r.value || 0);
           const div = document.createElement("div");
-          div.textContent =
+          const numberSpan = document.createElement("span");
+          numberSpan.textContent = `${i + 1}. `;
+          if (r.type === "use") {
+            numberSpan.classList.add("text-success");
+            div.classList.add("text-success");
+          }
+          div.appendChild(numberSpan);
+          const detailText =
             r.type === "use"
               ? formatUseSummary(r)
-              : `${i + 1}. [${formatRecordDate(r)}] ${r.activity} → ${
+              : `[${formatRecordDate(r)}] ${r.activity} -> ${
                   toHM(r.value).text
                 }`;
+          div.appendChild(document.createTextNode(detailText));
           summary.appendChild(div);
         });
         const totalText = toHM(total).text;
