@@ -2,7 +2,6 @@
   "records": [
     {
       "id": 1763023643787,
-      "timestamp": 1763023643787,
       "date": "13/11/2568",
       "type": "earn",
       "activity": "Backup OT",
@@ -11,7 +10,6 @@
     },
     {
       "id": 1763700051216,
-      "timestamp": 1763700051216,
       "date": "21/11/2568",
       "type": "use",
       "activity": "ทำธุระ",
@@ -26,7 +24,6 @@
     },
     {
       "id": 1763956254814,
-      "timestamp": 1763956254814,
       "date": "24/11/2568",
       "type": "use",
       "activity": "ลาไปงานรับปริญญา",
@@ -38,7 +35,55 @@
         "beforeHours": 22,
         "afterHours": 14.5
       }
+    },
+    {
+      "id": 1764209004986,
+      "date": "18/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 3
+    },
+    {
+      "id": 1764209027114,
+      "date": "19/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 2.25
+    },
+    {
+      "id": 1764209040709,
+      "date": "20/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 2.25
+    },
+    {
+      "id": 1764209156123,
+      "date": "21/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 1.5
+    },
+    {
+      "id": 1764209209810,
+      "date": "22/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 2.25
+    },
+    {
+      "id": 1764209222233,
+      "date": "24/11/2568",
+      "type": "earn",
+      "activity": "Support Case",
+      "dayType": "weekday",
+      "value": 2.25
     }
   ],
-  "lastUpdate": "24/11/2568 10:50:54"
+  "lastUpdate": "27/11/2568 09:07:02"
 }
