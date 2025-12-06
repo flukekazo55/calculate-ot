@@ -83,7 +83,16 @@
       "activity": "Support Case",
       "dayType": "weekday",
       "value": 3
+    },
+    {
+      "id": 1765013784208,
+      "timestamp": 1765013784208,
+      "date": "6/12/2568",
+      "type": "earn",
+      "activity": "Support Production Case",
+      "dayType": "weekend",
+      "value": 7
     }
   ],
-  "lastUpdate": "27/11/2568 09:07:02"
+  "lastUpdate": "6/12/2568 16:36:24"
 }
