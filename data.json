@@ -92,7 +92,21 @@
       "activity": "Support Production Case",
       "dayType": "weekend",
       "value": 7
+    },
+    {
+      "id": 1765859292400,
+      "date": "16/12/2568",
+      "type": "use",
+      "activity": "ลาไปเที่ยวโคราช",
+      "dayType": "use",
+      "value": -7.5,
+      "formatted": "[ลาไปเที่ยวโคราช] วันที่ 16/12/2568 [ใช้ 7 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [35 ชั่วโมง 45 นาที] เหลือ [28 ชั่วโมง 15 นาที] #Leave",
+      "meta": {
+        "spentHours": 7.5,
+        "beforeHours": 35.75,
+        "afterHours": 28.25
+      }
     }
   ],
-  "lastUpdate": "6/12/2568 16:36:24"
+  "lastUpdate": "16/12/2568 11:28:12"
 }
