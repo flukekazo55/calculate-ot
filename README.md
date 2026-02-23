@@ -2,11 +2,11 @@
 
 OT (overtime) calculator app.
 
-- Frontend: `index.html` (can run on GitHub Pages)
-- Backend: `server.js` (Node.js + Express)
-- Storage: Neon PostgreSQL via `DATABASE_URL` (fallback to local `data.json` only when `DATABASE_URL` is not set)
+- Frontend: `index.html` (GitHub Pages)
+- Backend: `server.js` (Node.js + Express on Render)
+- Database: Supabase PostgreSQL (`DATABASE_URL`)
 
-## Run Locally (Frontend + Backend)
+## Run Locally
 
 1. Install Node.js LTS
 2. Install dependencies
@@ -15,52 +15,25 @@ OT (overtime) calculator app.
 npm install
 ```
 
-3. Start server
-
-```bash
-npm start
-```
-
-Optional (recommended): set Neon DB before start
+3. Set environment (optional but recommended)
 
 ```bash
 DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
 ```
 
-4. Open
+4. Start server
+
+```bash
+npm start
+```
+
+5. Open
 
 ```text
 http://localhost:3000
 ```
 
-## Deploy FE + BE on Netlify (Single Project)
-
-This repo now includes:
-
-- `netlify.toml`
-- `netlify/functions/load.js`
-- `netlify/functions/save.js`
-- `netlify/functions/reset.js`
-- `netlify/functions/sync.js`
-
-Set these values in Netlify:
-
-- Build command: `npm install`
-- Publish directory: `.`
-- Functions directory: `netlify/functions`
-- Environment variable: `DATABASE_URL=<your-neon-connection-string>`
-
-Then deploy by connecting this GitHub repository to Netlify.
-
-Notes:
-
-- Frontend (`index.html`) is served as static.
-- Backend routes (`/load`, `/save`, `/reset`, `/sync`) are redirected to Netlify Functions by `netlify.toml`.
-- `/sync` is intentionally disabled on Netlify and returns `501`.
-- If `DATABASE_URL` is set, data is persisted in Neon PostgreSQL.
-- If `DATABASE_URL` is not set, fallback storage uses Netlify Blobs.
-
-## Deploy Frontend on GitHub Pages
+## Deploy Frontend (GitHub Pages)
 
 Workflow file: `.github/workflows/deploy-pages.yml`
 
@@ -69,51 +42,44 @@ Workflow file: `.github/workflows/deploy-pages.yml`
 3. Set source to `GitHub Actions`
 4. Run workflow (or push again)
 
-Frontend URL format:
-
-```text
-https://<github-username>.github.io/<repo-name>/
-```
-
-Example:
+Frontend URL:
 
 ```text
 https://flukekazo55.github.io/calculate-ot/
 ```
 
-## Deploy Backend on Render
+## Deploy Backend (Render)
 
-Files added:
+Files:
 
-- `render.yaml` (Render blueprint)
+- `render.yaml`
 - `.github/workflows/deploy-backend-render.yml` (optional deploy-hook trigger)
 
-### A) Create service on Render
+### Render Setup
 
 1. Open Render dashboard
 2. New -> `Blueprint` (or Web Service from this repo)
 3. Select this repository
-4. Deploy
+4. Set environment variables:
 
-### B) Set backend environment variables on Render
-
-- `ENABLE_GIT_SYNC=false` (recommended for hosted backend)
+- `DATABASE_URL=<supabase-postgres-connection-string>`
+- `ENABLE_GIT_SYNC=false`
 - `CORS_ORIGINS=https://flukekazo55.github.io`
 
 If you want localhost to call the same backend too:
 
 - `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
 
-### C) Optional: Auto-trigger backend deploy from GitHub Actions
+### Optional: Auto-trigger backend deploy from GitHub Actions
 
 1. In Render service, copy Deploy Hook URL
-2. In GitHub repo -> `Settings` -> `Secrets and variables` -> `Actions`
-3. Add secret: `RENDER_DEPLOY_HOOK_URL`
+2. GitHub -> `Settings` -> `Secrets and variables` -> `Actions`
+3. Add secret `RENDER_DEPLOY_HOOK_URL`
 4. Push changes to `main`
 
-## Connect GitHub Pages Frontend to Render Backend
+## Connect Frontend To Backend
 
-After backend is live (example: `https://calculate-ot-backend.onrender.com`), open frontend with query param once:
+After backend is live (example: `https://calculate-ot-backend.onrender.com`), open frontend once with query param:
 
 ```text
 https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend.onrender.com
@@ -123,11 +89,14 @@ The app stores this API base in `localStorage` key `otApiBase`.
 
 ## Backend Environment Variables
 
+- `DATABASE_URL` (Supabase PostgreSQL)
+- `OT_TABLE_NAME` (optional, default: `ot_data`)
+- `OT_ROW_ID` (optional, default: `singleton`)
 - `PORT` (auto from host)
 - `CORS_ORIGINS` (comma-separated allow list, or `*`)
 - `ENABLE_GIT_SYNC` (`true`/`false`)
 
-## Neon Schema And Import SQL
+## Supabase Schema And Import SQL
 
 Files:
 
@@ -166,27 +135,13 @@ Files:
 Open docs:
 
 - Local: `http://localhost:3000/swagger.html`
-- Netlify: `https://calculate-ot.netlify.app/swagger.html`
+- Render backend: `https://<your-render-domain>/swagger.html`
 
-## Important Notes
+## Notes
 
 - GitHub Pages is static only; backend routes do not run there.
-- Durable production storage should use `DATABASE_URL` (Neon/PostgreSQL).
-- When `DATABASE_URL` is not set, fallback storage may be ephemeral depending on platform.
-
-## Troubleshooting
-
-### Pages workflow errors
-
-If Pages shows `Not Found` during configure/deploy:
-
-1. Verify `Settings` -> `Pages` source is `GitHub Actions`
-2. Verify `Settings` -> `Actions` -> `General` -> `Workflow permissions` = `Read and write permissions`
-3. Confirm repo/org policy allows Pages
-
-### Backend deploy workflow does not run deploy
-
-If Action says missing secret, add `RENDER_DEPLOY_HOOK_URL`.
+- Production storage should use `DATABASE_URL`.
+- `/sync` is disabled when `DATABASE_URL` is enabled.
 
 ## Author
 

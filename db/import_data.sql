@@ -1,4 +1,4 @@
--- Import OT payload JSON into Neon/PostgreSQL.
+-- Import OT payload JSON into Supabase/PostgreSQL.
 -- Required psql variable:
 --   ot_payload -> compact JSON string from data.json
 -- Optional psql variable:

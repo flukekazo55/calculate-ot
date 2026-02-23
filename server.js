@@ -18,7 +18,9 @@ const ALLOW_ALL_ORIGINS = CORS_ORIGINS.includes("*");
 const DATABASE_URL = String(process.env.DATABASE_URL || "").trim();
 const USE_POSTGRES = DATABASE_URL.length > 0;
 const USE_SSL =
-  /sslmode=require/i.test(DATABASE_URL) || /neon\.tech/i.test(DATABASE_URL);
+  /sslmode=require/i.test(DATABASE_URL) ||
+  /neon\.tech/i.test(DATABASE_URL) ||
+  /supabase\.(co|com)/i.test(DATABASE_URL);
 const OT_TABLE_NAME = String(process.env.OT_TABLE_NAME || "ot_data").trim();
 const OT_ROW_ID = String(process.env.OT_ROW_ID || "singleton").trim();
 const TABLE_NAME_SAFE = OT_TABLE_NAME.replace(/[^a-zA-Z0-9_]/g, "");

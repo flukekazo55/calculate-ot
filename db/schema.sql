@@ -1,4 +1,4 @@
--- Neon/PostgreSQL schema for OT data storage.
+-- Supabase/PostgreSQL schema for OT data storage.
 -- Table name matches server default: OT_TABLE_NAME=ot_data
 
 CREATE TABLE IF NOT EXISTS ot_data (
