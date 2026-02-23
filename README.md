@@ -42,6 +42,7 @@ Set these values in Netlify:
 - Build command: `npm install`
 - Publish directory: `.`
 - Functions directory: `netlify/functions`
+- Environment variable: `DATABASE_URL=<your-neon-connection-string>`
 
 Then deploy by connecting this GitHub repository to Netlify.
 
@@ -50,7 +51,8 @@ Notes:
 - Frontend (`index.html`) is served as static.
 - Backend routes (`/load`, `/save`, `/reset`, `/sync`) are redirected to Netlify Functions by `netlify.toml`.
 - `/sync` is intentionally disabled on Netlify and returns `501`.
-- Data is persisted via Netlify Blobs (package: `@netlify/blobs`).
+- If `DATABASE_URL` is set, data is persisted in Neon PostgreSQL.
+- If `DATABASE_URL` is not set, fallback storage uses Netlify Blobs.
 
 ## Deploy Frontend on GitHub Pages
 
