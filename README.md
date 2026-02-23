@@ -2,7 +2,7 @@
 
 OT (overtime) calculator app.
 
-- Frontend: GitHub Pages (`index.html`)
+- Frontend: Static hosting (`index.html`)
 - Backend: Railway (`server.js`)
 - Database: Supabase PostgreSQL (`DATABASE_URL`)
 
@@ -33,21 +33,21 @@ npm start
 http://localhost:3000
 ```
 
-## Frontend Deploy (GitHub Pages)
+## Frontend Deploy (Any Static Host)
 
-Workflow: `.github/workflows/deploy-pages.yml`
+Deploy these files to your static host:
 
-1. Push to `main`
-2. GitHub -> `Settings` -> `Pages` -> Source = `GitHub Actions`
-3. GitHub -> `Settings` -> `Secrets and variables` -> `Actions` -> `Variables`
-4. Add variable:
-   - `API_BASE_URL=https://calculate-ot-backend-production.up.railway.app`
-5. Run workflow (or push again)
+- `index.html`
+- `config.js`
+- `swagger.html`
+- `openapi.json`
 
-Frontend URL:
+Set backend URL in `config.js`:
 
-```text
-https://flukekazo55.github.io/calculate-ot/
+```js
+window.__APP_CONFIG = Object.assign({}, window.__APP_CONFIG, {
+  API_BASE: "https://calculate-ot-backend-production.up.railway.app",
+});
 ```
 
 ## Backend Deploy (Railway)
@@ -62,11 +62,11 @@ Environment variables:
 - `DATABASE_URL=<supabase-postgres-connection-string>`
 - `PG_FAMILY=4`
 - `ENABLE_GIT_SYNC=false`
-- `CORS_ORIGINS=https://flukekazo55.github.io`
+- `CORS_ORIGINS=https://<your-frontend-domain>`
 
 If you also test from local frontend:
 
-- `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
+- `CORS_ORIGINS=https://<your-frontend-domain>,http://localhost:3000`
 
 Backend URL example:
 
@@ -79,15 +79,13 @@ https://calculate-ot-backend-production.up.railway.app
 `otApiBase` resolution order:
 
 1. Query string: `?api=...`
-2. GitHub variable `API_BASE_URL` (injected into `config.js` during Pages deploy)
+2. `window.__APP_CONFIG.API_BASE` from `config.js`
 3. Existing `localStorage` value (`otApiBase`)
-
-Important: `API_BASE_URL` must be absolute URL (include `https://`).
 
 Manual override example:
 
 ```text
-https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend-production.up.railway.app
+https://<your-frontend-domain>/?api=https://calculate-ot-backend-production.up.railway.app
 ```
 
 ## Supabase Schema And Import
@@ -134,7 +132,7 @@ psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 
 ## Notes
 
-- GitHub Pages is static only.
+- Frontend host is static only.
 - Backend routes: `/load`, `/save`, `/reset`, `/sync`
 - `/sync` is disabled when `DATABASE_URL` is enabled.
 
