@@ -90,6 +90,7 @@ The app stores this API base in `localStorage` key `otApiBase`.
 ## Backend Environment Variables
 
 - `DATABASE_URL` (Supabase PostgreSQL)
+- `PG_FAMILY` (optional, default: `4` to force IPv4 DNS resolution)
 - `OT_TABLE_NAME` (optional, default: `ot_data`)
 - `OT_ROW_ID` (optional, default: `singleton`)
 - `PORT` (auto from host)
@@ -102,6 +103,7 @@ Files:
 
 - `db/schema.sql`
 - `db/import_data.sql`
+- `db/import_data_current.sql` (generated snapshot from current `data.json`)
 
 Create schema:
 
@@ -123,6 +125,12 @@ bash:
 ```bash
 json="$(jq -c . data.json)"
 psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
+```
+
+Or import current snapshot directly:
+
+```bash
+psql "$DATABASE_URL" -f db/import_data_current.sql
 ```
 
 ## Swagger API Docs

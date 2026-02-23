@@ -17,6 +17,7 @@ const ALLOW_ALL_ORIGINS = CORS_ORIGINS.includes("*");
 
 const DATABASE_URL = String(process.env.DATABASE_URL || "").trim();
 const USE_POSTGRES = DATABASE_URL.length > 0;
+const PG_FAMILY = Number(process.env.PG_FAMILY || 4);
 const USE_SSL =
   /sslmode=require/i.test(DATABASE_URL) ||
   /neon\.tech/i.test(DATABASE_URL) ||
@@ -28,6 +29,7 @@ const TABLE_NAME_SAFE = OT_TABLE_NAME.replace(/[^a-zA-Z0-9_]/g, "");
 const pool = USE_POSTGRES
   ? new Pool({
       connectionString: DATABASE_URL,
+      family: PG_FAMILY,
       ssl: USE_SSL ? { rejectUnauthorized: false } : undefined,
     })
   : null;
