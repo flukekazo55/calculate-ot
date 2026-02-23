@@ -337,6 +337,7 @@
       </div>
     </div>
 
+    <script src="./config.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-3fpdpA9zKp1tcHTfb3e8DqnuM2J7l28anvf5Q0Mujr0=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
@@ -459,6 +460,9 @@
       const jq = window.jQuery || null;
       const API_BASE_STORAGE_KEY = "otApiBase";
       const API_QUERY_PARAM = "api";
+      const API_BASE_FROM_CONFIG = normalizeApiBase(
+        window.__APP_CONFIG?.API_BASE || ""
+      );
 
       function normalizeApiBase(input) {
         if (!input) return "";
@@ -473,6 +477,10 @@
             return queryValue;
           }
         } catch {}
+        if (API_BASE_FROM_CONFIG) {
+          localStorage.setItem(API_BASE_STORAGE_KEY, API_BASE_FROM_CONFIG);
+          return API_BASE_FROM_CONFIG;
+        }
         return normalizeApiBase(localStorage.getItem(API_BASE_STORAGE_KEY));
       }
       const apiBase = resolveApiBase();

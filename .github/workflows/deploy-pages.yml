@@ -31,9 +31,12 @@ jobs:
           enablement: false
 
       - name: Prepare static artifact
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
         run: |
           mkdir -p _site
-          cp index.html data.json _site/
+          cp index.html data.json config.js swagger.html openapi.json _site/
+          printf 'window.__APP_CONFIG = Object.assign({}, window.__APP_CONFIG, { API_BASE: "%s" });\n' "$API_BASE_URL" > _site/config.js
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

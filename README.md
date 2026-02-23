@@ -40,13 +40,21 @@ Workflow file: `.github/workflows/deploy-pages.yml`
 1. Push to `main`
 2. GitHub -> `Settings` -> `Pages`
 3. Set source to `GitHub Actions`
-4. Run workflow (or push again)
+4. (Recommended) GitHub -> `Settings` -> `Secrets and variables` -> `Actions` -> `Variables`:
+   - `API_BASE_URL=https://<your-backend-domain>`
+5. Run workflow (or push again)
 
 Frontend URL:
 
 ```text
 https://flukekazo55.github.io/calculate-ot/
 ```
+
+`otApiBase` resolution order in frontend:
+
+1. Query string `?api=...`
+2. GitHub variable `API_BASE_URL` (injected to `config.js` during Pages deploy)
+3. Existing `localStorage` value (`otApiBase`)
 
 ## Deploy Backend (Render)
 
