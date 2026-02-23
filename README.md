@@ -4,7 +4,7 @@ OT (overtime) calculator app.
 
 - Frontend: `index.html` (can run on GitHub Pages)
 - Backend: `server.js` (Node.js + Express)
-- Data file: `data.json`
+- Storage: Neon PostgreSQL via `DATABASE_URL` (fallback to local `data.json` only when `DATABASE_URL` is not set)
 
 ## Run Locally (Frontend + Backend)
 
@@ -19,6 +19,12 @@ npm install
 
 ```bash
 npm start
+```
+
+Optional (recommended): set Neon DB before start
+
+```bash
+DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
 ```
 
 4. Open
@@ -121,11 +127,40 @@ The app stores this API base in `localStorage` key `otApiBase`.
 - `CORS_ORIGINS` (comma-separated allow list, or `*`)
 - `ENABLE_GIT_SYNC` (`true`/`false`)
 
+## Neon Schema And Import SQL
+
+Files:
+
+- `db/schema.sql`
+- `db/import_data.sql`
+
+Create schema:
+
+```bash
+psql "$DATABASE_URL" -f db/schema.sql
+```
+
+Import `data.json` into row `singleton`:
+
+PowerShell:
+
+```powershell
+$json = (Get-Content data.json -Raw | ConvertFrom-Json | ConvertTo-Json -Compress)
+psql "$env:DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
+```
+
+bash:
+
+```bash
+json="$(jq -c . data.json)"
+psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
+```
+
 ## Important Notes
 
 - GitHub Pages is static only; backend routes do not run there.
-- Hosted backend that writes `data.json` may lose data on redeploy/restart depending on platform plan.
-- For durable production data, migrate from `data.json` to a database.
+- Durable production storage should use `DATABASE_URL` (Neon/PostgreSQL).
+- When `DATABASE_URL` is not set, fallback storage may be ephemeral depending on platform.
 
 ## Troubleshooting
 
