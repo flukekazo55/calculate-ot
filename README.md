@@ -1,83 +1,86 @@
-# ตัวคิดเวลา OT
+﻿# Calculate OT
 
-โปรเจกต์เว็บแอปพลิเคชันสำหรับคำนวณและบันทึกเวลาทำงานล่วงเวลา (OT) พร้อมระบบเก็บข้อมูลลงไฟล์ `data.json` โดยใช้ Node.js และ Express ตกแต่งด้วยโทนสีเขียว และฟอนต์ Kanit จาก Google Fonts
+OT (overtime) calculator web app with local record history, built with `Node.js` + `Express` for local server mode.
 
----
+## Features
 
-## วิธีติดตั้ง Dependencies
+- Calculate OT from start/end time
+- Support weekday/weekend/holiday rules
+- Save OT history and show total balance
+- Use OT in `hh:mm` format
+- Thai/English UI toggle
 
-1. ติดตั้ง [Node.js](https://nodejs.org/) (แนะนำเวอร์ชัน LTS)
-2. เปิดโฟลเดอร์โปรเจกต์ใน Terminal แล้วรันคำสั่ง:
+## Project Structure
 
-```bash
-npm init -y
-npm install express
+```text
+calculate-ot/
+- index.html
+- server.js
+- data.json
+- package.json
+- run-ot.sh
+- .github/workflows/deploy-pages.yml
 ```
 
-ระบบจะสร้างไฟล์ package.json และโฟลเดอร์ node_modules ให้โดยอัตโนมัติ และใช้ Express.js สำหรับรันเซิร์ฟเวอร์ฝั่งหลังบ้าน
+## Run Locally (Full Mode)
 
-วิธีการรันโปรแกรม
-ให้สิทธิ์รันไฟล์ .sh (ทำครั้งแรกครั้งเดียว):
+Use this mode if you want backend endpoints and Git sync (`/sync`) to work.
 
-```bash
-chmod +x run-ot.sh
-```
-
-จากนั้นรันโปรแกรมด้วยคำสั่ง:
+1. Install Node.js (LTS)
+2. Install dependencies:
 
 ```bash
-./run-ot.sh
+npm install
 ```
 
-ระบบจะตรวจสอบ Node.js และ Express ให้อัตโนมัติ ถ้ายังไม่มีจะติดตั้งให้ก่อนเริ่มรันเซิร์ฟเวอร์
+3. Start server:
 
-เมื่อรันสำเร็จ โปรแกรมจะเปิดเบราว์เซอร์ไปที่
-👉 http://localhost:3000
-และโหลดหน้าเว็บ "ตัวคิดเวลา OT" โดยอัตโนมัติ
-
-โครงสร้างไฟล์หลักของโปรเจกต์
 ```bash
-ot-tracker/
-├─ run-ot.sh        # สคริปต์สำหรับรันโปรแกรม
-├─ server.js        # ไฟล์เซิร์ฟเวอร์ Node.js (Express)
-├─ index.html       # หน้าเว็บหลัก (Theme + Kanit)
-└─ data.json        # ไฟล์เก็บข้อมูล OT (จะถูกสร้างอัตโนมัติ)
+npm start
 ```
 
-หมายเหตุ
-ระบบจะเก็บข้อมูล OT ทั้งหมดไว้ในไฟล์ data.json ภายในโฟลเดอร์เดียวกับโปรแกรม
+4. Open:
 
-เมื่อปิดหรือรีสตาร์ทเครื่อง ข้อมูลจะยังคงอยู่ครบถ้วน
+```text
+http://localhost:3000
+```
 
-ใช้งานได้ทั้ง macOS, Linux, และ Windows (ผ่าน Git Bash / WSL)
+## Deploy on GitHub Pages (Static Mode)
 
-หากต้องการเริ่มต้นใหม่ ให้ลบไฟล์ data.json แล้วรันใหม่อีกครั้ง
+This repo includes GitHub Actions workflow:
 
-ฟีเจอร์ในเว็บ
-บันทึกเวลา OT พร้อมคำนวณชั่วโมงถ่วงน้ำหนัก
+- `.github/workflows/deploy-pages.yml`
 
-ใช้ OT ได้โดยกรอกเวลาในรูปแบบ hh:mm
+### Steps
 
-ยอดสะสมจะเก็บในไฟล์ data.json
+1. Push this repository to GitHub
+2. In GitHub: `Settings` -> `Pages`
+3. Set source/build to `GitHub Actions`
+4. Push to `main` or run workflow manually from `Actions`
 
-พร้อมฟอนต์ Kanit
+### Important Limitation
 
-รองรับทั้งวันธรรมดา เสาร์-อาทิตย์ และวันหยุดพิเศษ
+GitHub Pages is static hosting only.
 
-แสดงยอดสะสมทั้งหมดเมื่อเปิดหน้าเว็บครั้งแรก
+- Works: UI, calculations, local browser storage
+- Not available on Pages: `server.js` endpoints (`/load`, `/save`, `/reset`, `/sync`), server-side Git pull/push
 
-จัดทำโดย: flukekazo55
+In static mode, data is kept in browser `localStorage`.
 
-## Deploy on GitHub Pages
+## GitHub Pages Error Fix
 
-This repository includes an automated GitHub Actions workflow at `.github/workflows/deploy-pages.yml`.
+If workflow fails with:
 
-1. Push this repository to GitHub.
-2. In GitHub, open `Settings` -> `Pages`.
-3. Set `Source` to `GitHub Actions`.
-4. Push to `main` (or run the workflow manually from the `Actions` tab).
+- `Get Pages site failed ... Not Found`
 
-Notes:
-- GitHub Pages hosts static files only.
-- The deployed page uses browser `localStorage` for OT records.
-- Server endpoints (`/load`, `/save`, `/reset`, `/sync`) and Git sync from `server.js` are available only when running the local Node.js server.
+Make sure:
+
+1. Workflow uses `actions/configure-pages@v5` with `enablement: true`
+2. Repo Actions permissions allow write access:
+   - `Settings` -> `Actions` -> `General` -> `Workflow permissions` -> `Read and write permissions`
+3. You have admin rights for the repository
+4. Organization policy does not block GitHub Pages
+
+## Author
+
+- `flukekazo55`
