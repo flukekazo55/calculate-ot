@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Calculate OT API",
+    "version": "1.0.0",
+    "description": "API for OT data load/save/reset/sync."
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Same-origin deployment (Netlify/Render/local)"
+    }
+  ],
+  "paths": {
+    "/load": {
+      "get": {
+        "summary": "Load OT data",
+        "operationId": "loadData",
+        "responses": {
+          "200": {
+            "description": "Current OT payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OTData"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/save": {
+      "post": {
+        "summary": "Save OT data",
+        "operationId": "saveData",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OTData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "savedData": {
+                      "$ref": "#/components/schemas/OTData"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reset": {
+      "post": {
+        "summary": "Reset OT data",
+        "operationId": "resetData",
+        "responses": {
+          "200": {
+            "description": "Reset successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "resetData": {
+                      "$ref": "#/components/schemas/OTData"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sync": {
+      "post": {
+        "summary": "Sync OT data to git (may be disabled)",
+        "operationId": "syncData",
+        "responses": {
+          "200": {
+            "description": "Sync success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SyncResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Sync disabled in current deployment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OTRecord": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "timestamp": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "earn",
+              "use"
+            ]
+          },
+          "activity": {
+            "type": "string"
+          },
+          "dayType": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "formatted": {
+            "type": "string"
+          },
+          "meta": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "activity",
+          "dayType",
+          "value"
+        ],
+        "additionalProperties": true
+      },
+      "OTData": {
+        "type": "object",
+        "properties": {
+          "records": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OTRecord"
+            }
+          },
+          "lastUpdate": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "records",
+          "lastUpdate"
+        ]
+      },
+      "SyncResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "pullOutput": {
+            "type": "string"
+          },
+          "pushOutput": {
+            "type": "string"
+          },
+          "commitOutput": {
+            "type": "string"
+          },
+          "syncedData": {
+            "$ref": "#/components/schemas/OTData"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "additionalProperties": true
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": true
+      }
+    }
+  }
+}

@@ -156,6 +156,18 @@ json="$(jq -c . data.json)"
 psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 ```
 
+## Swagger API Docs
+
+Files:
+
+- `openapi.json`
+- `swagger.html`
+
+Open docs:
+
+- Local: `http://localhost:3000/swagger.html`
+- Netlify: `https://calculate-ot.netlify.app/swagger.html`
+
 ## Important Notes
 
 - GitHub Pages is static only; backend routes do not run there.
