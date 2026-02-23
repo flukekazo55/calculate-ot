@@ -2,9 +2,16 @@
 
 OT (overtime) calculator app.
 
-- Frontend: Static hosting (`index.html`)
+- Frontend: static host (`index.html`)
 - Backend: Railway (`server.js`)
 - Database: Supabase PostgreSQL (`DATABASE_URL`)
+
+## Current Production
+
+- Frontend: `https://flukekazo55.github.io/calculate-ot/`
+- Backend: `https://calculate-ot-backend-production.up.railway.app`
+- Swagger UI: `https://calculate-ot-backend-production.up.railway.app/swagger.html`
+- OpenAPI: `https://calculate-ot-backend-production.up.railway.app/openapi.json`
 
 ## Local Run
 
@@ -33,9 +40,9 @@ npm start
 http://localhost:3000
 ```
 
-## Frontend Deploy (Any Static Host)
+## Frontend Deploy (Static Host)
 
-Deploy these files to your static host:
+Deploy these files:
 
 - `index.html`
 - `config.js`
@@ -62,33 +69,42 @@ Environment variables:
 - `DATABASE_URL=<supabase-postgres-connection-string>`
 - `PG_FAMILY=4`
 - `ENABLE_GIT_SYNC=false`
-- `CORS_ORIGINS=https://<your-frontend-domain>`
+- `CORS_ORIGINS=https://flukekazo55.github.io`
 
-If you also test from local frontend:
+If testing local frontend too:
 
-- `CORS_ORIGINS=https://<your-frontend-domain>,http://localhost:3000`
+- `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
 
-Backend URL example:
-
-```text
-https://calculate-ot-backend-production.up.railway.app
-```
-
-## Connect Frontend To Backend
+## Frontend to Backend Binding
 
 `otApiBase` resolution order:
 
-1. Query string: `?api=...`
+1. Query string `?api=...`
 2. `window.__APP_CONFIG.API_BASE` from `config.js`
 3. Existing `localStorage` value (`otApiBase`)
 
 Manual override example:
 
 ```text
-https://<your-frontend-domain>/?api=https://calculate-ot-backend-production.up.railway.app
+https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend-production.up.railway.app
 ```
 
-## Supabase Schema And Import
+## Quick Checks
+
+Backend should respond with JSON:
+
+- `GET /load`
+- `POST /save`
+- `POST /reset`
+- `POST /sync` (disabled when DB mode is enabled)
+
+Example:
+
+```text
+https://calculate-ot-backend-production.up.railway.app/load
+```
+
+## Supabase Schema and Import
 
 Files:
 
@@ -108,7 +124,7 @@ Import from current local snapshot:
 psql "$DATABASE_URL" -f db/import_data_current.sql
 ```
 
-Or import using variable payload script:
+Import with variable payload script:
 
 PowerShell:
 
@@ -124,11 +140,13 @@ json="$(jq -c . data.json)"
 psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 ```
 
-## API Docs (Swagger)
+## Troubleshooting
 
-- Local: `http://localhost:3000/swagger.html`
-- Backend: `https://calculate-ot-backend-production.up.railway.app/swagger.html`
-- OpenAPI JSON: `https://calculate-ot-backend-production.up.railway.app/openapi.json`
+- `load_failed` + `ENETUNREACH ... :5432`
+Use a DB endpoint reachable from Railway and keep `PG_FAMILY=4`.
+
+- Wrong backend path (frontend calls own domain)
+Set absolute `API_BASE` in `config.js` with `https://...`.
 
 ## Notes
 
