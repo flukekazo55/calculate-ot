@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: calculate-ot-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: ENABLE_GIT_SYNC
+        value: false

@@ -457,6 +457,25 @@
       let currentLang = localStorage.getItem("otLang") || "th";
       if (!translations[currentLang]) currentLang = "th";
       const jq = window.jQuery || null;
+      const API_BASE_STORAGE_KEY = "otApiBase";
+      const API_QUERY_PARAM = "api";
+
+      function normalizeApiBase(input) {
+        if (!input) return "";
+        return String(input).trim().replace(/\/+$/, "");
+      }
+      function resolveApiBase() {
+        try {
+          const params = new URLSearchParams(window.location.search);
+          const queryValue = normalizeApiBase(params.get(API_QUERY_PARAM));
+          if (queryValue) {
+            localStorage.setItem(API_BASE_STORAGE_KEY, queryValue);
+            return queryValue;
+          }
+        } catch {}
+        return normalizeApiBase(localStorage.getItem(API_BASE_STORAGE_KEY));
+      }
+      const apiBase = resolveApiBase();
 
       const $ = (s) => document.querySelector(s);
       const toHM = (h, lang = currentLang) => {
@@ -514,13 +533,19 @@
         syncBtn.disabled = !available;
         syncBtn.title = available
           ? ""
-          : "Git sync is unavailable on static hosting";
+          : "Backend API is unavailable";
+      }
+      function buildApiUrl(path) {
+        const normalized = path.startsWith("/") ? path.slice(1) : path;
+        if (!apiBase) {
+          return `./${normalized}`;
+        }
+        return `${apiBase}/${normalized}`;
       }
       async function fetchApi(path, options = {}) {
         if (!backendAvailable) return null;
-        const normalized = path.startsWith("/") ? path.slice(1) : path;
         try {
-          const response = await fetch(`./${normalized}`, options);
+          const response = await fetch(buildApiUrl(path), options);
           if (response.status === 404) {
             setBackendAvailability(false);
           }
@@ -734,7 +759,7 @@
       }
       async function syncGit() {
         if (!backendAvailable) {
-          await showInfo("Git sync is unavailable on static hosting");
+          await showInfo("Backend API is unavailable");
           return;
         }
         const btn = document.getElementById("syncBtn");

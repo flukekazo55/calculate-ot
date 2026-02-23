@@ -1,85 +1,118 @@
 ﻿# Calculate OT
 
-OT (overtime) calculator web app with local record history, built with `Node.js` + `Express` for local server mode.
+OT (overtime) calculator app.
 
-## Features
+- Frontend: `index.html` (can run on GitHub Pages)
+- Backend: `server.js` (Node.js + Express)
+- Data file: `data.json`
 
-- Calculate OT from start/end time
-- Support weekday/weekend/holiday rules
-- Save OT history and show total balance
-- Use OT in `hh:mm` format
-- Thai/English UI toggle
+## Run Locally (Frontend + Backend)
 
-## Project Structure
-
-```text
-calculate-ot/
-- index.html
-- server.js
-- data.json
-- package.json
-- run-ot.sh
-- .github/workflows/deploy-pages.yml
-```
-
-## Run Locally (Full Mode)
-
-Use this mode if you want backend endpoints and Git sync (`/sync`) to work.
-
-1. Install Node.js (LTS)
-2. Install dependencies:
+1. Install Node.js LTS
+2. Install dependencies
 
 ```bash
 npm install
 ```
 
-3. Start server:
+3. Start server
 
 ```bash
 npm start
 ```
 
-4. Open:
+4. Open
 
 ```text
 http://localhost:3000
 ```
 
-## Deploy on GitHub Pages (Static Mode)
+## Deploy Frontend on GitHub Pages
 
-This repo includes GitHub Actions workflow:
+Workflow file: `.github/workflows/deploy-pages.yml`
 
-- `.github/workflows/deploy-pages.yml`
+1. Push to `main`
+2. GitHub -> `Settings` -> `Pages`
+3. Set source to `GitHub Actions`
+4. Run workflow (or push again)
 
-### Steps
+Frontend URL format:
 
-1. Push this repository to GitHub
-2. In GitHub: `Settings` -> `Pages`
-3. Set source/build to `GitHub Actions`
-4. Push to `main` or run workflow manually from `Actions`
+```text
+https://<github-username>.github.io/<repo-name>/
+```
 
-### Important Limitation
+Example:
 
-GitHub Pages is static hosting only.
+```text
+https://flukekazo55.github.io/calculate-ot/
+```
 
-- Works: UI, calculations, local browser storage
-- Not available on Pages: `server.js` endpoints (`/load`, `/save`, `/reset`, `/sync`), server-side Git pull/push
+## Deploy Backend on Render
 
-In static mode, data is kept in browser `localStorage`.
+Files added:
 
-## GitHub Pages Error Fix
+- `render.yaml` (Render blueprint)
+- `.github/workflows/deploy-backend-render.yml` (optional deploy-hook trigger)
 
-If workflow fails with:
+### A) Create service on Render
 
-- `Get Pages site failed ... Not Found`
+1. Open Render dashboard
+2. New -> `Blueprint` (or Web Service from this repo)
+3. Select this repository
+4. Deploy
 
-Make sure:
+### B) Set backend environment variables on Render
 
-1. Workflow uses `actions/configure-pages@v5` with `enablement: true`
-2. Repo Actions permissions allow write access:
-   - `Settings` -> `Actions` -> `General` -> `Workflow permissions` -> `Read and write permissions`
-3. You have admin rights for the repository
-4. Organization policy does not block GitHub Pages
+- `ENABLE_GIT_SYNC=false` (recommended for hosted backend)
+- `CORS_ORIGINS=https://flukekazo55.github.io`
+
+If you want localhost to call the same backend too:
+
+- `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
+
+### C) Optional: Auto-trigger backend deploy from GitHub Actions
+
+1. In Render service, copy Deploy Hook URL
+2. In GitHub repo -> `Settings` -> `Secrets and variables` -> `Actions`
+3. Add secret: `RENDER_DEPLOY_HOOK_URL`
+4. Push changes to `main`
+
+## Connect GitHub Pages Frontend to Render Backend
+
+After backend is live (example: `https://calculate-ot-backend.onrender.com`), open frontend with query param once:
+
+```text
+https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend.onrender.com
+```
+
+The app stores this API base in `localStorage` key `otApiBase`.
+
+## Backend Environment Variables
+
+- `PORT` (auto from host)
+- `CORS_ORIGINS` (comma-separated allow list, or `*`)
+- `ENABLE_GIT_SYNC` (`true`/`false`)
+
+## Important Notes
+
+- GitHub Pages is static only; backend routes do not run there.
+- Hosted backend that writes `data.json` may lose data on redeploy/restart depending on platform plan.
+- For durable production data, migrate from `data.json` to a database.
+
+## Troubleshooting
+
+### Pages workflow errors
+
+If Pages shows `Not Found` during configure/deploy:
+
+1. Verify `Settings` -> `Pages` source is `GitHub Actions`
+2. Verify `Settings` -> `Actions` -> `General` -> `Workflow permissions` = `Read and write permissions`
+3. Confirm repo/org policy allows Pages
+
+### Backend deploy workflow does not run deploy
+
+If Action says missing secret, add `RENDER_DEPLOY_HOOK_URL`.
 
 ## Author
 

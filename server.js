@@ -5,7 +5,14 @@ const path = require("path");
 const { exec } = require("child_process");
 const util = require("util");
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const ENABLE_GIT_SYNC = process.env.ENABLE_GIT_SYNC !== "false";
+const CORS_ORIGINS_RAW = (process.env.CORS_ORIGINS || "").trim();
+const CORS_ORIGINS = CORS_ORIGINS_RAW
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const ALLOW_ALL_ORIGINS = CORS_ORIGINS.includes("*");
 
 const DATA_FILE = path.join(__dirname, "data.json");
 const DEFAULT_DATA = { records: [], lastUpdate: "" };
@@ -47,7 +54,36 @@ function readDataFile() {
   }
 }
 
+function isAllowedOrigin(origin) {
+  if (!origin) return true;
+  if (ALLOW_ALL_ORIGINS) return true;
+  if (CORS_ORIGINS.length > 0) {
+    return CORS_ORIGINS.includes(origin);
+  }
+  return (
+    /^http:\/\/localhost(?::\d+)?$/i.test(origin) ||
+    /^http:\/\/127\.0\.0\.1(?::\d+)?$/i.test(origin) ||
+    /^https:\/\/[a-z0-9-]+\.github\.io$/i.test(origin)
+  );
+}
+
 app.use(express.json());
+app.use((req, res, next) => {
+  const origin = req.headers.origin || "";
+  if (!isAllowedOrigin(origin)) {
+    return res.status(403).json({ error: "cors_forbidden", origin });
+  }
+  if (origin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(express.static(__dirname)); // ให้เปิด index.html ได้โดยตรง
 
 // โหลดข้อมูล
@@ -81,6 +117,12 @@ app.post("/reset", (req, res) => {
 });
 
 app.post("/sync", async (req, res) => {
+  if (!ENABLE_GIT_SYNC) {
+    return res.status(501).json({
+      error: "sync_disabled",
+      details: "Git sync is disabled on this deployment.",
+    });
+  }
   try {
     ensureDataFile();
     await abortMergeStates();

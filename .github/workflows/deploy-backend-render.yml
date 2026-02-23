@@ -1,0 +1,33 @@
+name: Deploy Backend (Render)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - server.js
+      - package.json
+      - package-lock.json
+      - data.json
+      - render.yaml
+      - .github/workflows/deploy-backend-render.yml
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: ${{ secrets.RENDER_DEPLOY_HOOK_URL != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL"
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+  missing-secret:
+    if: ${{ secrets.RENDER_DEPLOY_HOOK_URL == '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Missing secret
+        run: |
+          echo "RENDER_DEPLOY_HOOK_URL secret is not set."
+          echo "Add it in GitHub repo settings -> Secrets and variables -> Actions."
