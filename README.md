@@ -67,3 +67,17 @@ ot-tracker/
 แสดงยอดสะสมทั้งหมดเมื่อเปิดหน้าเว็บครั้งแรก
 
 จัดทำโดย: flukekazo55
+
+## Deploy on GitHub Pages
+
+This repository includes an automated GitHub Actions workflow at `.github/workflows/deploy-pages.yml`.
+
+1. Push this repository to GitHub.
+2. In GitHub, open `Settings` -> `Pages`.
+3. Set `Source` to `GitHub Actions`.
+4. Push to `main` (or run the workflow manually from the `Actions` tab).
+
+Notes:
+- GitHub Pages hosts static files only.
+- The deployed page uses browser `localStorage` for OT records.
+- Server endpoints (`/load`, `/save`, `/reset`, `/sync`) and Git sync from `server.js` are available only when running the local Node.js server.

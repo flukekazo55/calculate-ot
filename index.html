@@ -506,6 +506,30 @@
         info: "infoTitle",
         warning: "infoTitle",
       };
+      let backendAvailable = true;
+      function setBackendAvailability(available) {
+        backendAvailable = available;
+        const syncBtn = document.getElementById("syncBtn");
+        if (!syncBtn) return;
+        syncBtn.disabled = !available;
+        syncBtn.title = available
+          ? ""
+          : "Git sync is unavailable on static hosting";
+      }
+      async function fetchApi(path, options = {}) {
+        if (!backendAvailable) return null;
+        const normalized = path.startsWith("/") ? path.slice(1) : path;
+        try {
+          const response = await fetch(`./${normalized}`, options);
+          if (response.status === 404) {
+            setBackendAvailability(false);
+          }
+          return response;
+        } catch (err) {
+          setBackendAvailability(false);
+          return null;
+        }
+      }
       function showAlertModal({ icon = "info", titleKey, text = "" }) {
         const resolvedKey = titleKey || defaultTitleByIcon[icon];
         const resolvedTitle = resolvedKey ? t(resolvedKey) : "";
@@ -618,27 +642,39 @@
         return { weightedMin };
       }
       async function loadData() {
-        const r = await fetch("/load");
-        const d = await r.json();
-        localStorage.setItem("otRecords", JSON.stringify(d.records));
-        localStorage.setItem("otLastUpdate", d.lastUpdate);
-        renderSummary(true);
+        const localRecords = JSON.parse(
+          localStorage.getItem("otRecords") || "[]"
+        );
+        try {
+          const r = await fetchApi("load");
+          if (!r || !r.ok) throw new Error("load_unavailable");
+          const d = await r.json();
+          localStorage.setItem("otRecords", JSON.stringify(d.records));
+          localStorage.setItem("otLastUpdate", d.lastUpdate);
+          renderSummary(true);
+        } catch {
+          renderSummary(localRecords.length > 0);
+        }
       }
       async function saveData() {
+        if (!backendAvailable) return;
         const data = {
           records: JSON.parse(localStorage.getItem("otRecords") || "[]"),
           lastUpdate: new Date().toLocaleString(getLocale()),
         };
-        await fetch("/save", {
+        const response = await fetchApi("save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
+        if (!response || !response.ok) return;
       }
       async function resetData() {
         const confirmed = await confirmAction();
         if (!confirmed) return;
-        await fetch("/reset", { method: "POST" });
+        if (backendAvailable) {
+          await fetchApi("reset", { method: "POST" });
+        }
         localStorage.clear();
         renderSummary();
         await showSuccess(t("resetSuccess"));
@@ -697,6 +733,10 @@
         await showSuccess(t("useAlert", toHM(hr).text, toHM(after).text));
       }
       async function syncGit() {
+        if (!backendAvailable) {
+          await showInfo("Git sync is unavailable on static hosting");
+          return;
+        }
         const btn = document.getElementById("syncBtn");
         if (btn) btn.disabled = true;
         try {
@@ -709,7 +749,10 @@
               Swal.showLoading();
             },
           });
-          const response = await fetch("/sync", { method: "POST" });
+          const response = await fetchApi("sync", { method: "POST" });
+          if (!response) {
+            throw new Error("sync_unavailable");
+          }
           let data = {};
           try {
             data = await response.json();
@@ -746,7 +789,7 @@
           Swal.close();
           await showError(`${t("syncError")}${err?.message ? ` (${err.message})` : ""}`);
         } finally {
-          if (btn) btn.disabled = false;
+          if (btn) btn.disabled = !backendAvailable;
         }
       }
       function saveRecord(
@@ -875,6 +918,7 @@
       patchNativeAlerts();
       setupLanguageToggle();
       applyTranslations();
+      setBackendAvailability(true);
       loadData();
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
