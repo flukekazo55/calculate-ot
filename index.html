@@ -466,7 +466,18 @@
 
       function normalizeApiBase(input) {
         if (!input) return "";
-        return String(input).trim().replace(/\/+$/, "");
+        let value = String(input).trim();
+        if (!value) return "";
+        if (/^\/\//.test(value)) {
+          value = `https:${value}`;
+        } else if (
+          !/^https?:\/\//i.test(value) &&
+          /^[a-z0-9.-]+\.[a-z]{2,}(:\d+)?(\/.*)?$/i.test(value)
+        ) {
+          // Allow env/query values like "api.example.com" without scheme.
+          value = `https://${value}`;
+        }
+        return value.replace(/\/+$/, "");
       }
       function resolveApiBase() {
         try {

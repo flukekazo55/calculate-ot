@@ -2,26 +2,26 @@
 
 OT (overtime) calculator app.
 
-- Frontend: `index.html` (GitHub Pages)
-- Backend: `server.js` (Node.js + Express on Render)
+- Frontend: GitHub Pages (`index.html`)
+- Backend: Railway (`server.js`)
 - Database: Supabase PostgreSQL (`DATABASE_URL`)
 
-## Run Locally
+## Local Run
 
-1. Install Node.js LTS
+1. Install Node.js (LTS)
 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-3. Set environment (optional but recommended)
+3. (Recommended) set database URL
 
 ```bash
-DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require
 ```
 
-4. Start server
+4. Start app
 
 ```bash
 npm start
@@ -33,15 +33,15 @@ npm start
 http://localhost:3000
 ```
 
-## Deploy Frontend (GitHub Pages)
+## Frontend Deploy (GitHub Pages)
 
-Workflow file: `.github/workflows/deploy-pages.yml`
+Workflow: `.github/workflows/deploy-pages.yml`
 
 1. Push to `main`
-2. GitHub -> `Settings` -> `Pages`
-3. Set source to `GitHub Actions`
-4. (Recommended) GitHub -> `Settings` -> `Secrets and variables` -> `Actions` -> `Variables`:
-   - `API_BASE_URL=https://<your-backend-domain>`
+2. GitHub -> `Settings` -> `Pages` -> Source = `GitHub Actions`
+3. GitHub -> `Settings` -> `Secrets and variables` -> `Actions` -> `Variables`
+4. Add variable:
+   - `API_BASE_URL=https://calculate-ot-backend-production.up.railway.app`
 5. Run workflow (or push again)
 
 Frontend URL:
@@ -50,68 +50,53 @@ Frontend URL:
 https://flukekazo55.github.io/calculate-ot/
 ```
 
-`otApiBase` resolution order in frontend:
+## Backend Deploy (Railway)
 
-1. Query string `?api=...`
-2. GitHub variable `API_BASE_URL` (injected to `config.js` during Pages deploy)
-3. Existing `localStorage` value (`otApiBase`)
+Service settings:
 
-## Deploy Backend (Render)
+- Build command: `npm install`
+- Start command: `npm start`
 
-Files:
-
-- `render.yaml`
-- `.github/workflows/deploy-backend-render.yml` (optional deploy-hook trigger)
-
-### Render Setup
-
-1. Open Render dashboard
-2. New -> `Blueprint` (or Web Service from this repo)
-3. Select this repository
-4. Set environment variables:
+Environment variables:
 
 - `DATABASE_URL=<supabase-postgres-connection-string>`
+- `PG_FAMILY=4`
 - `ENABLE_GIT_SYNC=false`
 - `CORS_ORIGINS=https://flukekazo55.github.io`
 
-If you want localhost to call the same backend too:
+If you also test from local frontend:
 
 - `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
 
-### Optional: Auto-trigger backend deploy from GitHub Actions
+Backend URL example:
 
-1. In Render service, copy Deploy Hook URL
-2. GitHub -> `Settings` -> `Secrets and variables` -> `Actions`
-3. Add secret `RENDER_DEPLOY_HOOK_URL`
-4. Push changes to `main`
+```text
+https://calculate-ot-backend-production.up.railway.app
+```
 
 ## Connect Frontend To Backend
 
-After backend is live (example: `https://calculate-ot-backend.onrender.com`), open frontend once with query param:
+`otApiBase` resolution order:
+
+1. Query string: `?api=...`
+2. GitHub variable `API_BASE_URL` (injected into `config.js` during Pages deploy)
+3. Existing `localStorage` value (`otApiBase`)
+
+Important: `API_BASE_URL` must be absolute URL (include `https://`).
+
+Manual override example:
 
 ```text
-https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend.onrender.com
+https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend-production.up.railway.app
 ```
 
-The app stores this API base in `localStorage` key `otApiBase`.
-
-## Backend Environment Variables
-
-- `DATABASE_URL` (Supabase PostgreSQL)
-- `PG_FAMILY` (optional, default: `4` to force IPv4 DNS resolution)
-- `OT_TABLE_NAME` (optional, default: `ot_data`)
-- `OT_ROW_ID` (optional, default: `singleton`)
-- `PORT` (auto from host)
-- `CORS_ORIGINS` (comma-separated allow list, or `*`)
-- `ENABLE_GIT_SYNC` (`true`/`false`)
-
-## Supabase Schema And Import SQL
+## Supabase Schema And Import
 
 Files:
 
 - `db/schema.sql`
 - `db/import_data.sql`
-- `db/import_data_current.sql` (generated snapshot from current `data.json`)
+- `db/import_data_current.sql`
 
 Create schema:
 
@@ -119,7 +104,13 @@ Create schema:
 psql "$DATABASE_URL" -f db/schema.sql
 ```
 
-Import `data.json` into row `singleton`:
+Import from current local snapshot:
+
+```bash
+psql "$DATABASE_URL" -f db/import_data_current.sql
+```
+
+Or import using variable payload script:
 
 PowerShell:
 
@@ -135,28 +126,16 @@ json="$(jq -c . data.json)"
 psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 ```
 
-Or import current snapshot directly:
-
-```bash
-psql "$DATABASE_URL" -f db/import_data_current.sql
-```
-
-## Swagger API Docs
-
-Files:
-
-- `openapi.json`
-- `swagger.html`
-
-Open docs:
+## API Docs (Swagger)
 
 - Local: `http://localhost:3000/swagger.html`
-- Render backend: `https://<your-render-domain>/swagger.html`
+- Backend: `https://calculate-ot-backend-production.up.railway.app/swagger.html`
+- OpenAPI JSON: `https://calculate-ot-backend-production.up.railway.app/openapi.json`
 
 ## Notes
 
-- GitHub Pages is static only; backend routes do not run there.
-- Production storage should use `DATABASE_URL`.
+- GitHub Pages is static only.
+- Backend routes: `/load`, `/save`, `/reset`, `/sync`
 - `/sync` is disabled when `DATABASE_URL` is enabled.
 
 ## Author
