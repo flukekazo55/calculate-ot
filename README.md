@@ -27,6 +27,31 @@ npm start
 http://localhost:3000
 ```
 
+## Deploy FE + BE on Netlify (Single Project)
+
+This repo now includes:
+
+- `netlify.toml`
+- `netlify/functions/load.js`
+- `netlify/functions/save.js`
+- `netlify/functions/reset.js`
+- `netlify/functions/sync.js`
+
+Set these values in Netlify:
+
+- Build command: `npm install`
+- Publish directory: `.`
+- Functions directory: `netlify/functions`
+
+Then deploy by connecting this GitHub repository to Netlify.
+
+Notes:
+
+- Frontend (`index.html`) is served as static.
+- Backend routes (`/load`, `/save`, `/reset`, `/sync`) are redirected to Netlify Functions by `netlify.toml`.
+- `/sync` is intentionally disabled on Netlify and returns `501`.
+- Data is persisted via Netlify Blobs (package: `@netlify/blobs`).
+
 ## Deploy Frontend on GitHub Pages
 
 Workflow file: `.github/workflows/deploy-pages.yml`
