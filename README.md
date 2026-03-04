@@ -1,43 +1,90 @@
-﻿# Calculate OT
+# Calculate OT
 
-OT (overtime) calculator app.
+Simple overtime (OT) tracker with a static frontend and a Node.js backend.
 
-- Frontend: static host (`index.html`)
-- Backend: Railway (`server.js`)
-- Database: Supabase PostgreSQL (`DATABASE_URL`)
+- Frontend: static files (`index.html`, `config.js`)
+- Backend: Express server (`server.js`)
+- Storage mode:
+  - PostgreSQL when `DATABASE_URL` is set
+  - Local `data.json` file when `DATABASE_URL` is empty
 
 ## Current Production
 
 - Frontend: `https://flukekazo55.github.io/calculate-ot/`
 - Backend: `https://calculate-ot-backend-production.up.railway.app`
 - Swagger UI: `https://calculate-ot-backend-production.up.railway.app/swagger.html`
-- OpenAPI: `https://calculate-ot-backend-production.up.railway.app/openapi.json`
+- OpenAPI JSON: `https://calculate-ot-backend-production.up.railway.app/openapi.json`
 
 ## Local Run
 
-1. Install Node.js (LTS)
-2. Install dependencies
+1. Install Node.js (LTS).
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-3. (Recommended) set database URL
+3. Configure environment variables (optional for local file mode):
 
-```bash
-DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require
+PowerShell:
+
+```powershell
+$env:DATABASE_URL = "postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require"
 ```
 
-4. Start app
+bash:
+
+```bash
+export DATABASE_URL="postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require"
+```
+
+4. Start server:
 
 ```bash
 npm start
 ```
 
-5. Open
+5. Open:
 
 ```text
 http://localhost:3000
+```
+
+## Environment Variables
+
+- `PORT` (default: `3000`)
+- `DATABASE_URL` (enable PostgreSQL mode when set)
+- `PG_FAMILY` (default: `4`, useful for IPv4 on some hosts)
+- `OT_TABLE_NAME` (default: `ot_data`)
+- `OT_ROW_ID` (default: `singleton`)
+- `ENABLE_GIT_SYNC` (default: enabled unless set to `false`)
+- `CORS_ORIGINS` (comma-separated allowlist, for example `https://flukekazo55.github.io,http://localhost:3000`)
+
+## API Routes
+
+- `GET /load` -> load current OT payload
+- `POST /save` -> save payload
+- `POST /reset` -> reset to empty payload
+- `POST /sync` -> git-based sync (disabled when `DATABASE_URL` is set or `ENABLE_GIT_SYNC=false`)
+
+Quick check:
+
+```text
+https://calculate-ot-backend-production.up.railway.app/load
+```
+
+## Frontend to Backend Binding
+
+`otApiBase` is resolved in this order:
+
+1. Query string: `?api=...`
+2. `window.__APP_CONFIG.API_BASE` from `config.js`
+3. Existing `localStorage` value: `otApiBase`
+
+Manual override example:
+
+```text
+https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend-production.up.railway.app
 ```
 
 ## Frontend Deploy (Static Host)
@@ -64,45 +111,16 @@ Service settings:
 - Build command: `npm install`
 - Start command: `npm start`
 
-Environment variables:
+Recommended environment variables:
 
 - `DATABASE_URL=<supabase-postgres-connection-string>`
 - `PG_FAMILY=4`
 - `ENABLE_GIT_SYNC=false`
 - `CORS_ORIGINS=https://flukekazo55.github.io`
 
-If testing local frontend too:
+If you also test from localhost:
 
 - `CORS_ORIGINS=https://flukekazo55.github.io,http://localhost:3000`
-
-## Frontend to Backend Binding
-
-`otApiBase` resolution order:
-
-1. Query string `?api=...`
-2. `window.__APP_CONFIG.API_BASE` from `config.js`
-3. Existing `localStorage` value (`otApiBase`)
-
-Manual override example:
-
-```text
-https://flukekazo55.github.io/calculate-ot/?api=https://calculate-ot-backend-production.up.railway.app
-```
-
-## Quick Checks
-
-Backend should respond with JSON:
-
-- `GET /load`
-- `POST /save`
-- `POST /reset`
-- `POST /sync` (disabled when DB mode is enabled)
-
-Example:
-
-```text
-https://calculate-ot-backend-production.up.railway.app/load
-```
 
 ## Supabase Schema and Import
 
@@ -118,13 +136,13 @@ Create schema:
 psql "$DATABASE_URL" -f db/schema.sql
 ```
 
-Import from current local snapshot:
+Import current snapshot:
 
 ```bash
 psql "$DATABASE_URL" -f db/import_data_current.sql
 ```
 
-Import with variable payload script:
+Import using payload variable:
 
 PowerShell:
 
@@ -142,18 +160,12 @@ psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 
 ## Troubleshooting
 
-- `load_failed` + `ENETUNREACH ... :5432`
-Use a DB endpoint reachable from Railway and keep `PG_FAMILY=4`.
-
-- Wrong backend path (frontend calls own domain)
-Set absolute `API_BASE` in `config.js` with `https://...`.
-
-## Notes
-
-- Frontend host is static only.
-- Backend routes: `/load`, `/save`, `/reset`, `/sync`
-- `/sync` is disabled when `DATABASE_URL` is enabled.
+- `load_failed` with network errors on `:5432`
+  Use a DB endpoint reachable from the backend host and keep `PG_FAMILY=4`.
+- Frontend calling wrong backend origin
+  Set absolute `API_BASE` in `config.js` (`https://...`).
 
 ## Author
 
 - `flukekazo55`
+
