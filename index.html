@@ -1,307 +1,371 @@
 <!DOCTYPE html>
-<html lang="th">
+<html class="light" lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Calculate OT (V1.0)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OT Time Tracker</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&family=Manrope:wght@700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-lowest": "#ffffff",
+              "surface-container-highest": "#dae5df",
+              "on-primary-fixed-variant": "#006852",
+              "on-surface": "#2b3530",
+              "primary-fixed-dim": "#90e5c8",
+              "tertiary-dim": "#205a65",
+              "on-tertiary-container": "#215b66",
+              "inverse-surface": "#0a0f0d",
+              "on-tertiary": "#eefbff",
+              "secondary-fixed-dim": "#c0dacf",
+              "tertiary-fixed-dim": "#a9e0ed",
+              "surface-dim": "#d2ddd6",
+              "on-secondary-container": "#3f574e",
+              primary: "#006B54",
+              "tertiary-container": "#b7eefc",
+              "primary-dim": "#005f4a",
+              "inverse-primary": "#a9ffe1",
+              "surface-tint": "#006B54",
+              outline: "#727d78",
+              "on-secondary-fixed-variant": "#496057",
+              "on-error-container": "#6e0a12",
+              "surface-container-low": "#eff5f0",
+              "error-dim": "#67040d",
+              "on-tertiary-fixed": "#034853",
+              "on-error": "#fff7f6",
+              "tertiary-fixed": "#b7eefc",
+              "on-secondary-fixed": "#2d443c",
+              "secondary-fixed": "#cee9dd",
+              "outline-variant": "#aab4af",
+              "surface-bright": "#f6faf6",
+              error: "#a83836",
+              "on-primary-fixed": "#004938",
+              "primary-container": "#9ef3d6",
+              "surface-container-high": "#e1eae5",
+              tertiary: "#2f6772",
+              "secondary-container": "#cee9dd",
+              "on-secondary": "#e4fff3",
+              "on-primary": "#e4fff3",
+              "on-tertiary-fixed-variant": "#2d6570",
+              "surface-variant": "#dae5df",
+              background: "#f6faf6",
+              "secondary-dim": "#40584f",
+              "on-background": "#2b3530",
+              secondary: "#4c645b",
+              "on-surface-variant": "#57615d",
+              surface: "#f6faf6",
+              "surface-container": "#e8f0ea",
+              "error-container": "#fa746f",
+              "inverse-on-surface": "#999e9b",
+              "primary-fixed": "#9ef3d6",
+              "on-primary-container": "#005d49",
+            },
+            fontFamily: {
+              headline: ["Manrope"],
+              body: ["Inter"],
+              label: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
   </head>
-  <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div class="topbar__inner">
-          <div class="brand">
-            <div class="brand__mark">
-              <span class="material-symbols-outlined" aria-hidden="true">
-                timelapse
-              </span>
-            </div>
-            <div class="brand__copy">
-              <p class="brand__eyebrow" data-i18n="appTitle">
-                Calculate OT (V1.0)
-              </p>
-              <p class="brand__title" data-i18n="heroCaption">
-                ติดตามยอด OT ปัจจุบัน บันทึกเพิ่ม และใช้ชดเชยได้จากหน้าจอเดียว
-              </p>
-            </div>
-          </div>
+  <body class="min-h-screen bg-background pb-24 font-body text-on-surface md:pb-8">
+    <header
+      class="tonal-shift-bg sticky top-0 z-40 w-full border-b border-outline-variant/20 bg-[#f6faf6]/90 backdrop-blur"
+    >
+      <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined rounded-lg bg-primary-container p-2 text-primary" aria-hidden="true">timelapse</span>
+          <span class="font-headline text-xl font-bold text-primary" data-i18n="appTitle">Calculate OT (V1.0)</span>
+        </div>
 
-          <div class="topbar__actions">
-            <div class="language-cluster">
-              <span class="action-label" data-i18n="languageLabel">ภาษา</span>
-              <label
-                class="switcher switcher--th"
-                id="languageSwitcher"
-                aria-label="ภาษา: ภาษาไทย"
-              >
-                <span class="visually-hidden" id="languageToggleText">
-                  ภาษาไทย
-                </span>
-                <input
-                  class="switcher-input"
-                  type="checkbox"
-                  id="languageToggle"
-                />
-                <span class="switcher-track">
-                  <span class="switcher-thumb"></span>
-                </span>
-                <span
-                  class="switcher-flag switcher-flag--th"
-                  id="languageFlag"
-                  aria-hidden="true"
-                ></span>
-              </label>
-            </div>
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            id="syncBtn"
+            class="hidden items-center gap-2 rounded-lg bg-primary-container px-4 py-2 font-medium text-on-primary-container transition-colors duration-200 hover:bg-[#9ef3d6] active:scale-95 md:flex"
+          >
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">sync</span>
+            <span data-i18n="syncBtn">Sync Git</span>
+          </button>
 
-            <button type="button" id="syncBtn" class="action-btn">
-              <span class="material-symbols-outlined" aria-hidden="true">
-                sync
+          <div class="language-cluster flex items-center gap-2">
+            <span
+              class="action-label text-[11px] font-bold uppercase tracking-wider text-on-surface-variant"
+              data-i18n="languageLabel"
+              >Language</span
+            >
+            <label
+              class="switcher switcher--th"
+              id="languageSwitcher"
+              aria-label="Language: Thai"
+            >
+              <span class="visually-hidden" id="languageToggleText">Thai</span>
+              <input class="switcher-input" type="checkbox" id="languageToggle" />
+              <span class="switcher-track">
+                <span class="switcher-thumb"></span>
               </span>
-              <span data-i18n="syncBtn">ซิงก์ Git</span>
-            </button>
+              <span
+                class="switcher-flag switcher-flag--th"
+                id="languageFlag"
+                aria-hidden="true"
+              ></span>
+            </label>
           </div>
         </div>
-      </header>
+      </div>
+    </header>
 
-      <main class="dashboard">
-        <section class="hero-card">
-          <div>
-            <p class="hero-eyebrow" data-i18n="heading">ตัวคิดเวลา OT</p>
-            <h1 class="hero-value" id="heroTotalValue">0 ชม. 0 น.</h1>
-            <p class="hero-label" data-i18n="initBalanceLabel">
-              ยอด OT ปัจจุบันทั้งหมด
+    <main class="mx-auto max-w-7xl px-6 py-8">
+      <section class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-6 shadow-sm">
+          <div class="mb-2 flex items-start justify-between">
+            <p class="font-headline text-xs font-bold uppercase tracking-wider text-on-surface-variant" data-i18n="entryCountLabel">
+              Total Entries
             </p>
-            <p class="hero-copy" data-i18n="heroCaption">
-              ติดตามยอด OT ปัจจุบัน บันทึกเพิ่ม และใช้ชดเชยได้จากหน้าจอเดียว
+            <span class="material-symbols-outlined text-primary" aria-hidden="true">checklist</span>
+          </div>
+          <div class="flex flex-col">
+            <h2 id="recordCountValue" class="font-headline text-3xl font-extrabold text-[#006B54]">0</h2>
+            <p class="mt-1 text-xs text-on-surface-variant" data-i18n="historyCountLabel">entries</p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-outline-variant/30 bg-surface-container-low p-6 shadow-sm">
+          <div class="mb-2 flex items-start justify-between">
+            <p class="font-headline text-xs font-bold uppercase tracking-wider text-on-surface-variant" data-i18n="lastUpdateLabel">
+              Last Updated
             </p>
-            <div id="initBalance" class="inline-pill" style="display: none"></div>
+            <span class="material-symbols-outlined text-tertiary" aria-hidden="true">update</span>
           </div>
-
-          <div class="hero-metrics">
-            <div class="metric-card">
-              <span class="metric-label" data-i18n="entryCountLabel">
-                รายการทั้งหมด
-              </span>
-              <strong class="metric-value" id="recordCountValue">0</strong>
-            </div>
-            <div class="metric-card">
-              <span class="metric-label" data-i18n="lastUpdateLabel">
-                อัปเดตล่าสุด
-              </span>
-              <strong class="metric-value metric-value--small" id="lastUpdateValue">
-                ยังไม่มีข้อมูล
-              </strong>
-            </div>
+          <div class="flex flex-col">
+            <h2 id="lastUpdateValue" class="font-headline text-lg font-bold text-tertiary">No data yet</h2>
+            <p class="mt-1 text-xs text-on-surface-variant" data-i18n="historyPanelHint">
+              Newest items appear first together with the running balance.
+            </p>
           </div>
+        </div>
 
-          <div class="hero-orb hero-orb--one" aria-hidden="true"></div>
-          <div class="hero-orb hero-orb--two" aria-hidden="true"></div>
-        </section>
+        <div class="rounded-2xl bg-gradient-to-br from-primary to-primary-dim p-6 text-white shadow-md">
+          <div class="mb-2 flex items-start justify-between">
+            <p class="font-headline text-xs font-bold uppercase tracking-wider text-primary-container/90" data-i18n="initBalanceLabel">
+              Current OT Balance
+            </p>
+            <span class="material-symbols-outlined text-primary-container" aria-hidden="true">account_balance_wallet</span>
+          </div>
+          <div class="flex flex-col">
+            <h2 id="heroTotalValue" class="font-headline text-3xl font-extrabold">0h 0m</h2>
+            <p class="mt-1 text-xs text-primary-container/80" data-i18n="heroCaption">
+              Track the current OT balance, add new entries, and record OT usage from one screen.
+            </p>
+            <div id="initBalance" class="hidden"></div>
+          </div>
+        </div>
+      </section>
 
-        <div class="dashboard-grid">
-          <div class="form-stack">
-            <section class="panel">
-              <div class="panel-header">
-                <div class="panel-title-wrap">
-                  <div class="panel-icon">
-                    <span class="material-symbols-outlined" aria-hidden="true">
-                      add_task
-                    </span>
-                  </div>
-                  <div>
-                    <h2 class="panel-title" data-i18n="calcCardTitle">บันทึก OT</h2>
-                    <p class="panel-copy" data-i18n="recordPanelHint">
-                      คำนวณตามประเภทวันแล้วบันทึกเข้าเวลาสะสม
-                    </p>
-                  </div>
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div class="space-y-6 lg:col-span-7">
+          <section class="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-5">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-container">
+                <span class="material-symbols-outlined text-[20px] text-primary" aria-hidden="true">add_task</span>
+              </div>
+              <h2 class="font-headline text-lg font-bold" data-i18n="calcCardTitle">Record OT</h2>
+            </div>
+
+            <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="dayTypeLabel">Day Type</label>
+                <select
+                  id="dayType"
+                  class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="weekday" data-i18n="dayType.weekday">Weekday (Mon-Fri)</option>
+                  <option value="weekend" data-i18n="dayType.weekend">Weekend / Day Off</option>
+                  <option value="holiday" data-i18n="dayType.holiday">Holiday</option>
+                </select>
+              </div>
+
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="activityLabel">Activity</label>
+                <input
+                  id="activity"
+                  type="text"
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  placeholder="e.g., Sprint Planning"
+                  data-i18n-placeholder="activityPlaceholder"
+                />
+              </div>
+            </div>
+
+            <div class="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="startLabel">Start Time</label>
+                <div class="relative">
+                  <input
+                    id="startTime"
+                    type="time"
+                    step="60"
+                    value="17:00"
+                    class="time-input w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:ring-2 focus:ring-primary/20"
+                  />
+                  <span class="material-symbols-outlined pointer-events-none absolute right-3 top-2 text-sm text-outline" aria-hidden="true">schedule</span>
                 </div>
               </div>
 
-              <div class="field-grid">
-                <label class="field">
-                  <span class="field-label" data-i18n="dayTypeLabel">
-                    ประเภทวัน
-                  </span>
-                  <span class="field-control">
-                    <select id="dayType">
-                      <option value="weekday" data-i18n="dayType.weekday">
-                        วันธรรมดา (จ.-ศ.)
-                      </option>
-                      <option value="weekend" data-i18n="dayType.weekend">
-                        เสาร์ / อาทิตย์
-                      </option>
-                      <option value="holiday" data-i18n="dayType.holiday">
-                        วันหยุดพิเศษ
-                      </option>
-                    </select>
-                  </span>
-                </label>
-
-                <label class="field">
-                  <span class="field-label" data-i18n="activityLabel">
-                    กิจกรรม
-                  </span>
-                  <span class="field-control">
-                    <input
-                      id="activity"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="เช่น แก้ระบบหลังบ้าน"
-                      data-i18n-placeholder="activityPlaceholder"
-                    />
-                  </span>
-                </label>
-
-                <label class="field">
-                  <span class="field-label" data-i18n="startLabel">
-                    เริ่ม (24 ชม.)
-                  </span>
-                  <span class="field-control field-control--icon">
-                    <input id="startTime" type="time" value="17:00" step="60" />
-                    <span class="material-symbols-outlined" aria-hidden="true">
-                      schedule
-                    </span>
-                  </span>
-                </label>
-
-                <label class="field">
-                  <span class="field-label" data-i18n="endLabel">
-                    สิ้นสุด (24 ชม.)
-                  </span>
-                  <span class="field-control field-control--icon">
-                    <input id="endTime" type="time" value="20:00" step="60" />
-                    <span class="material-symbols-outlined" aria-hidden="true">
-                      schedule
-                    </span>
-                  </span>
-                </label>
-              </div>
-
-              <div class="button-row">
-                <button id="calcBtn" type="button" class="primary-btn">
-                  <span class="material-symbols-outlined" aria-hidden="true">
-                    calculate
-                  </span>
-                  <span data-i18n="calcBtn">คำนวณ &amp; บันทึก</span>
-                </button>
-                <button id="resetBtn" type="button" class="danger-btn">
-                  <span class="material-symbols-outlined" aria-hidden="true">
-                    delete_sweep
-                  </span>
-                  <span data-i18n="resetBtn">ล้างข้อมูลทั้งหมด</span>
-                </button>
-              </div>
-            </section>
-
-            <section class="panel panel--accent">
-              <div class="panel-header">
-                <div class="panel-title-wrap">
-                  <div class="panel-icon panel-icon--tertiary">
-                    <span class="material-symbols-outlined" aria-hidden="true">
-                      history_edu
-                    </span>
-                  </div>
-                  <div>
-                    <h2 class="panel-title" data-i18n="useCardTitle">ใช้ OT</h2>
-                    <p class="panel-copy" data-i18n="usePanelHint">
-                      หัก OT ออกจากยอดคงเหลือพร้อมบันทึกหมายเหตุ
-                    </p>
-                  </div>
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="endLabel">End Time</label>
+                <div class="relative">
+                  <input
+                    id="endTime"
+                    type="time"
+                    step="60"
+                    value="20:00"
+                    class="time-input w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:ring-2 focus:ring-primary/20"
+                  />
+                  <span class="material-symbols-outlined pointer-events-none absolute right-3 top-2 text-sm text-outline" aria-hidden="true">schedule</span>
                 </div>
               </div>
+            </div>
 
-              <div class="field-grid">
-                <label class="field">
-                  <span class="field-label" data-i18n="useTimeLabel">
-                    เวลาที่ใช้ (hh:mm)
-                  </span>
-                  <span class="field-control">
-                    <input
-                      id="useTime"
-                      type="text"
-                      inputmode="numeric"
-                      autocomplete="off"
-                      placeholder="เช่น 02:30"
-                      data-i18n-placeholder="useTimePlaceholder"
-                    />
-                  </span>
-                </label>
+            <div class="flex gap-2">
+              <button
+                id="calcBtn"
+                type="button"
+                class="flex-1 rounded-xl bg-primary py-2.5 text-sm font-bold text-on-primary transition-all hover:opacity-95 active:scale-95"
+              >
+                <span data-i18n="calcBtn">Save Record</span>
+              </button>
+              <button
+                id="resetBtn"
+                type="button"
+                class="rounded-xl bg-surface-container-highest px-4 py-2.5 text-sm font-medium text-on-surface-variant transition-all hover:opacity-80"
+              >
+                <span data-i18n="resetBtn">Clear</span>
+              </button>
+            </div>
+          </section>
 
-                <label class="field">
-                  <span class="field-label" data-i18n="useNoteLabel">
-                    หมายเหตุ
-                  </span>
-                  <span class="field-control">
-                    <input
-                      id="useNote"
-                      type="text"
-                      autocomplete="off"
-                      placeholder="เช่น ใช้ชดเชย #Leave"
-                      data-i18n-placeholder="useNotePlaceholder"
-                    />
-                  </span>
-                </label>
+          <section class="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-5">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-tertiary-container">
+                <span class="material-symbols-outlined text-[20px] text-tertiary" aria-hidden="true">history_edu</span>
+              </div>
+              <h2 class="font-headline text-lg font-bold" data-i18n="useCardTitle">Use OT</h2>
+            </div>
+
+            <div class="mb-5 grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="useTimeLabel">Time Used</label>
+                <input
+                  id="useTime"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:ring-2 focus:ring-primary/20"
+                  placeholder="hh:mm"
+                  data-i18n-placeholder="useTimePlaceholder"
+                />
               </div>
 
-              <div class="button-row">
-                <button id="useBtn" type="button" class="secondary-btn">
-                  <span class="material-symbols-outlined" aria-hidden="true">
-                    timer_play
-                  </span>
-                  <span data-i18n="useBtn">บันทึกการใช้ OT</span>
-                </button>
+              <div class="space-y-1">
+                <label class="ml-1 text-[11px] font-bold uppercase text-on-surface-variant" data-i18n="useNoteLabel">Remarks</label>
+                <input
+                  id="useNote"
+                  type="text"
+                  autocomplete="off"
+                  class="w-full rounded-lg border border-outline-variant/30 bg-surface-container-lowest px-3 py-2 text-sm transition-all focus:ring-2 focus:ring-primary/20"
+                  placeholder="e.g., #Leave"
+                  data-i18n-placeholder="useNotePlaceholder"
+                />
               </div>
-            </section>
-          </div>
+            </div>
 
-          <aside class="panel history-panel">
-            <div class="panel-header">
-              <div class="panel-title-wrap">
-                <div class="panel-icon panel-icon--history">
-                  <span class="material-symbols-outlined" aria-hidden="true">
-                    history
-                  </span>
+            <button
+              id="useBtn"
+              type="button"
+              class="w-full rounded-xl bg-tertiary py-2.5 text-sm font-bold text-white transition-all hover:opacity-95 active:scale-95"
+            >
+              <span data-i18n="useBtn">Record Use</span>
+            </button>
+          </section>
+        </div>
+
+        <aside class="lg:col-span-5">
+          <div class="flex h-full flex-col rounded-2xl border border-outline-variant/20 bg-surface-container-low p-6">
+            <div class="mb-6 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container-highest">
+                  <span class="material-symbols-outlined text-[20px] text-on-surface" aria-hidden="true">history</span>
                 </div>
                 <div>
-                  <h2 class="panel-title" data-i18n="historyTitle">ประวัติทั้งหมด</h2>
-                  <p class="panel-copy" data-i18n="historyPanelHint">
-                    รายการล่าสุดจะถูกแสดงด้านบนพร้อมสรุปยอดคงเหลือ
+                  <h2 class="font-headline text-lg font-bold" data-i18n="historyTitle">History Log</h2>
+                  <p class="text-xs text-on-surface-variant" data-i18n="historyPanelHint">
+                    Newest items appear first together with the running balance.
                   </p>
                 </div>
               </div>
-
-              <span class="history-counter">
+              <span class="rounded-full bg-surface-container-high px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-on-surface-variant">
                 <strong id="summaryCount">0</strong>
-                <span data-i18n="historyCountLabel">รายการ</span>
+                <span data-i18n="historyCountLabel">entries</span>
               </span>
             </div>
 
-            <div id="summaryList" class="history-list" role="list"></div>
+            <div
+              id="summaryList"
+              class="history-list custom-scrollbar max-h-[500px] flex-1 space-y-3 overflow-y-auto pr-1"
+              role="list"
+            ></div>
 
-            <div class="history-footer">
-              <div>
-                <p class="history-footer__label" data-i18n="grandTotalLabel">
-                  รวมทั้งหมด
-                </p>
-                <p class="history-footer__value" id="grandTotal">
-                  0 ชั่วโมง 0 นาที
-                </p>
+            <div class="mt-4 border-t border-surface-container-highest pt-4">
+              <div class="flex items-center justify-between rounded-xl bg-surface-container-high p-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-on-surface-variant" data-i18n="grandTotalLabel">
+                  Current Net Balance
+                </span>
+                <span id="grandTotal" class="font-headline text-base font-extrabold text-on-surface">0 hours 0 minutes</span>
               </div>
             </div>
-          </aside>
-        </div>
-      </main>
-    </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <nav
+      class="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around rounded-t-[1.5rem] bg-[#eff5f0]/90 px-4 pb-4 pt-2 shadow-[0_-8px_24px_rgba(0,107,84,0.08)] backdrop-blur-xl md:hidden"
+    >
+      <a class="flex flex-col items-center justify-center rounded-2xl bg-[#006B54] px-6 py-2.5 text-white duration-150 active:scale-90" href="#">
+        <span class="material-symbols-outlined" aria-hidden="true">dashboard</span>
+        <span class="mt-0.5 text-[10px] font-bold">Dashboard</span>
+      </a>
+      <a class="flex flex-col items-center justify-center px-5 py-2 text-on-surface-variant duration-150 active:scale-90" href="#">
+        <span class="material-symbols-outlined" aria-hidden="true">history</span>
+        <span class="mt-0.5 text-[10px] font-medium">History</span>
+      </a>
+      <a class="flex flex-col items-center justify-center px-5 py-2 text-on-surface-variant duration-150 active:scale-90" href="#">
+        <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+        <span class="mt-0.5 text-[10px] font-medium">Settings</span>
+      </a>
+    </nav>
 
     <script src="./config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
