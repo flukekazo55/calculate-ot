@@ -20,7 +20,7 @@ body,
 button,
 input,
 select {
-  font-family: "Noto Serif Thai", serif;
+  font-family: "Kanit", system-ui, sans-serif;
 }
 
 .material-symbols-outlined {
@@ -269,7 +269,7 @@ select {
 
 .swal2-popup {
   border-radius: 1rem !important;
-  font-family: "Noto Serif Thai", serif !important;
+  font-family: "Kanit", system-ui, sans-serif !important;
 }
 
 .swal2-confirm {
