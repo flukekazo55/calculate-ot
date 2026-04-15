@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -33,26 +34,8 @@ func FromEnv() Config {
 		rowID = "singleton"
 	}
 
-	dataFile := strings.TrimSpace(os.Getenv("DATA_FILE"))
-	if dataFile == "" {
-		dataFile = "data.json"
-	}
-
-	originsRaw := strings.TrimSpace(os.Getenv("CORS_ORIGINS"))
-	origins := make([]string, 0)
-	allowAll := false
-	if originsRaw != "" {
-		for _, origin := range strings.Split(originsRaw, ",") {
-			trimmed := strings.TrimSpace(origin)
-			if trimmed == "" {
-				continue
-			}
-			if trimmed == "*" {
-				allowAll = true
-			}
-			origins = append(origins, trimmed)
-		}
-	}
+	dataFile := resolveDataFile()
+	origins, allowAll := parseOrigins(os.Getenv("CORS_ORIGINS"))
 
 	return Config{
 		Port:            port,
@@ -63,4 +46,34 @@ func FromEnv() Config {
 		CORSOrigins:     origins,
 		AllowAllOrigins: allowAll,
 	}
+}
+
+func resolveDataFile() string {
+	dataFile := strings.TrimSpace(os.Getenv("DATA_FILE"))
+	if dataFile != "" {
+		return dataFile
+	}
+
+	if os.Getenv("VERCEL") == "1" || strings.TrimSpace(os.Getenv("VERCEL_ENV")) != "" {
+		return filepath.Join(os.TempDir(), "calculate-ot-data.json")
+	}
+
+	return "data.json"
+}
+
+func parseOrigins(originsRaw string) ([]string, bool) {
+	origins := make([]string, 0)
+	allowAll := false
+	for _, origin := range strings.Split(strings.TrimSpace(originsRaw), ",") {
+		trimmed := strings.TrimSpace(origin)
+		if trimmed == "" {
+			continue
+		}
+		if trimmed == "*" {
+			allowAll = true
+		}
+		origins = append(origins, trimmed)
+	}
+
+	return origins, allowAll
 }
