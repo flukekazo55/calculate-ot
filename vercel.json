@@ -1,7 +1,7 @@
 {
-  "installCommand": "npm install --include=dev",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/frontend",
+  "installCommand": "if [ -f frontend/package.json ]; then npm --prefix frontend install --include=dev; else npm install --include=dev; fi",
+  "buildCommand": "if [ -f frontend/package.json ]; then npm --prefix frontend run build && mkdir -p dist && rm -rf dist/frontend && cp -R frontend/dist/frontend dist/frontend; else npm run build; fi",
+  "outputDirectory": "dist/frontend/browser",
   "rewrites": [
     {
       "source": "/(.*)",
