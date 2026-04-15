@@ -1,0 +1,382 @@
+<div class="min-h-screen bg-[#f6faf6] pb-10 text-[#2b3530]">
+  <section class="alert-stack" aria-live="polite" aria-atomic="true">
+    <article
+      *ngFor="let alert of alerts; trackBy: trackByAlertId"
+      class="alert-card"
+      [class.alert-card--success]="alert.kind === 'success'"
+      [class.alert-card--error]="alert.kind === 'error'"
+      role="status"
+    >
+      <div class="alert-main">
+        <div class="alert-icon">
+          <span class="material-symbols-outlined" aria-hidden="true">{{ alert.icon }}</span>
+        </div>
+
+        <div class="alert-copy">
+          <h3>{{ alert.title }}</h3>
+          <p>{{ alert.message }}</p>
+        </div>
+
+        <button type="button" class="alert-close" (click)="dismissAlert(alert.id)" [attr.aria-label]="t('alertCloseAria')">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <div class="alert-footer">
+        <button
+          *ngIf="alert.secondaryLabel"
+          type="button"
+          class="alert-btn alert-btn--ghost"
+          (click)="onAlertSecondary(alert)"
+        >
+          {{ alert.secondaryLabel }}
+        </button>
+        <button type="button" class="alert-btn alert-btn--solid" (click)="onAlertPrimary(alert)">
+          {{ alert.primaryLabel }}
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <header class="tonal-shift-bg sticky top-0 z-40 w-full border-b border-[#aab4af]/20 bg-[#f6faf6]/90 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined rounded-lg bg-[#9ef3d6] p-2 text-[#006b54]" aria-hidden="true">timelapse</span>
+        <span class="text-xl font-bold text-[#006b54]">{{ t('appTitle') }}</span>
+      </div>
+
+      <div class="language-cluster flex items-center gap-2">
+        <span class="action-label text-[11px] font-bold uppercase tracking-wider text-[#57615d]">{{ t('languageLabel') }}</span>
+        <label class="switcher" [class.switcher--en]="currentLang === 'en'" [class.switcher--th]="currentLang !== 'en'">
+          <span class="visually-hidden">{{ currentLang === 'en' ? t('langEnglish') : t('langThai') }}</span>
+          <input class="switcher-input" type="checkbox" [checked]="currentLang === 'en'" (change)="onLanguageToggle($event)" />
+          <span class="switcher-track">
+            <span class="switcher-thumb"></span>
+          </span>
+          <span class="switcher-flag" [class.switcher-flag--en]="currentLang === 'en'" [class.switcher-flag--th]="currentLang !== 'en'" aria-hidden="true"></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-7xl px-6 py-8">
+    <section class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div class="rounded-2xl border border-[#aab4af]/30 bg-white p-6 shadow-sm">
+        <div class="mb-2 flex items-start justify-between">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#57615d]">{{ t('entryCountLabel') }}</p>
+          <span class="material-symbols-outlined text-[#006b54]" aria-hidden="true">checklist</span>
+        </div>
+        <div class="flex flex-col">
+          <h2 class="text-3xl font-extrabold text-[#006b54]">{{ records.length }}</h2>
+          <p class="mt-1 text-xs text-[#57615d]">{{ t('historyCountLabel') }}</p>
+        </div>
+      </div>
+
+      <div class="rounded-2xl border border-[#aab4af]/30 bg-white p-6 shadow-sm">
+        <div class="mb-2 flex items-start justify-between">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#57615d]">{{ t('lastUpdateLabel') }}</p>
+          <span class="material-symbols-outlined text-[#2f6772]" aria-hidden="true">update</span>
+        </div>
+        <h2 class="text-lg font-bold text-[#2f6772]">{{ lastUpdateText }}</h2>
+      </div>
+
+      <div class="rounded-2xl bg-gradient-to-br from-[#006b54] to-[#005f4a] p-6 text-white shadow-md">
+        <div class="mb-2 flex items-start justify-between">
+          <p class="text-xs font-bold uppercase tracking-wider text-[#9ef3d6]">{{ t('initBalanceLabel') }}</p>
+          <span class="material-symbols-outlined text-[#9ef3d6]" aria-hidden="true">account_balance_wallet</span>
+        </div>
+        <h2 class="text-3xl font-extrabold">{{ totalCompactText }}</h2>
+        <p class="mt-1 text-xs text-[#9ef3d6]">{{ t('heroCaption') }}</p>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
+      <div class="space-y-6 lg:col-span-7">
+        <section id="history-section" class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#9ef3d6]">
+              <span class="material-symbols-outlined text-[20px] text-[#006b54]" aria-hidden="true">add_task</span>
+            </div>
+            <h2 class="text-lg font-bold">{{ t('calcCardTitle') }}</h2>
+          </div>
+
+          <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('dayTypeLabel') }}</label>
+              <select
+                name="dayType"
+                [(ngModel)]="dayType"
+                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm focus:border-[#006b54]"
+              >
+                <option value="weekday">{{ t('dayType.weekday') }}</option>
+                <option value="weekend">{{ t('dayType.weekend') }}</option>
+                <option value="holiday">{{ t('dayType.holiday') }}</option>
+              </select>
+            </div>
+
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('activityLabel') }}</label>
+              <input
+                name="activity"
+                [(ngModel)]="activity"
+                type="text"
+                autocomplete="off"
+                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm focus:border-[#006b54]"
+                [placeholder]="t('activityPlaceholder')"
+              />
+            </div>
+          </div>
+
+          <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('startLabel') }}</label>
+              <div class="timepicker-wrap">
+                <button
+                  type="button"
+                  class="time-input-collapsed"
+                  [class.time-input-collapsed--active]="isTimePickerOpen('startTime')"
+                  (click)="toggleTimePicker('startTime')"
+                  aria-haspopup="dialog"
+                  [attr.aria-expanded]="isTimePickerOpen('startTime')"
+                >
+                  <span
+                    class="material-symbols-outlined time-input-collapsed__icon"
+                    [class.time-input-collapsed__icon--active]="isTimePickerOpen('startTime')"
+                    aria-hidden="true"
+                  >
+                    schedule
+                  </span>
+                  <span class="time-input-collapsed__text" [class.time-input-collapsed__text--placeholder]="!startTime">
+                    {{ displayTimeValue(startTime) }}
+                  </span>
+                </button>
+
+                <div class="timepicker-pop" *ngIf="isTimePickerOpen('startTime')" role="dialog" [attr.aria-label]="t('startTimePickerAria')">
+                  <div class="timepicker-selected">
+                    <span class="timepicker-selected__value">{{ pickerHour | number:'2.0-0' }}</span>
+                    <span class="timepicker-selected__colon">:</span>
+                    <span class="timepicker-selected__value">{{ pickerMinute | number:'2.0-0' }}</span>
+                  </div>
+
+                  <div class="timepicker-columns">
+                    <div class="timepicker-columns__overlay"></div>
+                    <div class="timepicker-col custom-scrollbar">
+                      <button
+                        type="button"
+                        *ngFor="let hour of pickerHours"
+                        class="timepicker-option"
+                        [class.timepicker-option--active]="hour === pickerHour"
+                        (click)="pickHour(hour)"
+                      >
+                        {{ hour | number:'2.0-0' }}
+                      </button>
+                    </div>
+
+                    <div class="timepicker-divider" aria-hidden="true"></div>
+
+                    <div class="timepicker-col custom-scrollbar">
+                      <button
+                        type="button"
+                        *ngFor="let minute of pickerMinutes"
+                        class="timepicker-option"
+                        [class.timepicker-option--active]="minute === pickerMinute"
+                        (click)="pickMinute(minute)"
+                      >
+                        {{ minute | number:'2.0-0' }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="timepicker-actions">
+                    <button type="button" class="timepicker-action-btn timepicker-action-btn--ghost" (click)="setPickerNow()">
+                      <span class="material-symbols-outlined text-[14px]" aria-hidden="true">bolt</span>
+                      {{ t('timeNowBtn') }}
+                    </button>
+                    <button type="button" class="timepicker-action-btn timepicker-action-btn--solid" (click)="confirmTimePicker()">
+                      <span class="material-symbols-outlined text-[14px]" aria-hidden="true">check_circle</span>
+                      {{ t('timeConfirmBtn') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('endLabel') }}</label>
+              <div class="timepicker-wrap">
+                <button
+                  type="button"
+                  class="time-input-collapsed"
+                  [class.time-input-collapsed--active]="isTimePickerOpen('endTime')"
+                  (click)="toggleTimePicker('endTime')"
+                  aria-haspopup="dialog"
+                  [attr.aria-expanded]="isTimePickerOpen('endTime')"
+                >
+                  <span
+                    class="material-symbols-outlined time-input-collapsed__icon"
+                    [class.time-input-collapsed__icon--active]="isTimePickerOpen('endTime')"
+                    aria-hidden="true"
+                  >
+                    schedule
+                  </span>
+                  <span class="time-input-collapsed__text" [class.time-input-collapsed__text--placeholder]="!endTime">
+                    {{ displayTimeValue(endTime) }}
+                  </span>
+                </button>
+
+                <div class="timepicker-pop" *ngIf="isTimePickerOpen('endTime')" role="dialog" [attr.aria-label]="t('endTimePickerAria')">
+                  <div class="timepicker-selected">
+                    <span class="timepicker-selected__value">{{ pickerHour | number:'2.0-0' }}</span>
+                    <span class="timepicker-selected__colon">:</span>
+                    <span class="timepicker-selected__value">{{ pickerMinute | number:'2.0-0' }}</span>
+                  </div>
+
+                  <div class="timepicker-columns">
+                    <div class="timepicker-columns__overlay"></div>
+                    <div class="timepicker-col custom-scrollbar">
+                      <button
+                        type="button"
+                        *ngFor="let hour of pickerHours"
+                        class="timepicker-option"
+                        [class.timepicker-option--active]="hour === pickerHour"
+                        (click)="pickHour(hour)"
+                      >
+                        {{ hour | number:'2.0-0' }}
+                      </button>
+                    </div>
+
+                    <div class="timepicker-divider" aria-hidden="true"></div>
+
+                    <div class="timepicker-col custom-scrollbar">
+                      <button
+                        type="button"
+                        *ngFor="let minute of pickerMinutes"
+                        class="timepicker-option"
+                        [class.timepicker-option--active]="minute === pickerMinute"
+                        (click)="pickMinute(minute)"
+                      >
+                        {{ minute | number:'2.0-0' }}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="timepicker-actions">
+                    <button type="button" class="timepicker-action-btn timepicker-action-btn--ghost" (click)="setPickerNow()">
+                      <span class="material-symbols-outlined text-[14px]" aria-hidden="true">bolt</span>
+                      {{ t('timeNowBtn') }}
+                    </button>
+                    <button type="button" class="timepicker-action-btn timepicker-action-btn--solid" (click)="confirmTimePicker()">
+                      <span class="material-symbols-outlined text-[14px]" aria-hidden="true">check_circle</span>
+                      {{ t('timeConfirmBtn') }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            <button
+              type="button"
+              class="rounded-lg bg-[#006b54] px-4 py-2 text-sm font-semibold text-white hover:bg-[#005f4a]"
+              (click)="calc()"
+            >
+              {{ t('calcBtn') }}
+            </button>
+            <button
+              type="button"
+              class="form-clear-btn"
+              (click)="clearForm()"
+            >
+              <span class="material-symbols-outlined" aria-hidden="true">ink_eraser</span>
+              {{ t('clearFormBtn') }}
+            </button>
+          </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
+          <div class="mb-4 flex items-center gap-3">
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b7eefc]">
+              <span class="material-symbols-outlined text-[20px] text-[#2f6772]" aria-hidden="true">event_available</span>
+            </div>
+            <h2 class="text-lg font-bold">{{ t('useCardTitle') }}</h2>
+          </div>
+
+          <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('useTimeLabel') }}</label>
+              <input
+                name="useTime"
+                [(ngModel)]="useTime"
+                type="text"
+                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm"
+                [placeholder]="t('useTimePlaceholder')"
+              />
+            </div>
+
+            <div class="space-y-1">
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('useNoteLabel') }}</label>
+              <input
+                name="useNote"
+                [(ngModel)]="useNote"
+                type="text"
+                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm"
+                [placeholder]="t('useNotePlaceholder')"
+              />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="rounded-lg bg-[#2f6772] px-4 py-2 text-sm font-semibold text-white hover:bg-[#205a65]"
+            (click)="useOT()"
+          >
+            {{ t('useBtn') }}
+          </button>
+        </section>
+      </div>
+
+      <aside class="lg:col-span-5">
+        <section class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
+          <div class="mb-4 flex items-center justify-between">
+            <h2 class="text-lg font-bold">{{ t('historyTitle') }}</h2>
+            <span class="rounded-full bg-[#9ef3d6] px-3 py-1 text-xs font-bold text-[#005d49]">
+              {{ t('grandTotalLabel') }}: {{ totalText }}
+            </span>
+          </div>
+
+          <div class="custom-scrollbar history-list space-y-3 overflow-y-auto pr-1">
+            <div *ngIf="sortedRecords.length === 0" class="history-empty">
+              <span class="material-symbols-outlined">schedule</span>
+              <p>{{ t('historyEmpty') }}</p>
+            </div>
+
+            <article
+              *ngFor="let record of sortedRecords; trackBy: trackByRecordId"
+              class="history-item"
+              [class.history-item--use]="isUseRecord(record)"
+            >
+              <div class="history-item__top">
+                <div>
+                  <p class="history-kind">{{ isUseRecord(record) ? t('useCardTitle') : t('calcCardTitle') }}</p>
+                  <h3 class="history-title">{{ record.activity || t('defaultActivity') }}</h3>
+                </div>
+                <div class="history-amount">{{ isUseRecord(record) ? '-' : '+' }} {{ toClockHM(record.value) }}</div>
+              </div>
+
+              <p class="history-detail">{{ formatHistoryDetail(record) }}</p>
+
+              <div class="history-meta">
+                <span class="history-date">
+                  <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+                  <span>{{ formatRecordDate(record) }}</span>
+                </span>
+                <span class="history-chip">{{ getRecordTag(record) }}</span>
+              </div>
+            </article>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</div>

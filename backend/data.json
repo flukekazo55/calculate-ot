@@ -1,0 +1,304 @@
+{
+  "records": [
+    {
+      "activity": "Backup OT",
+      "date": "13/11/2568",
+      "dayType": "weekend",
+      "id": 1763023643787,
+      "type": "earn",
+      "value": 24
+    },
+    {
+      "activity": "ทำธุระ",
+      "date": "21/11/2568",
+      "dayType": "use",
+      "id": 1763700051216,
+      "type": "use",
+      "value": -2
+    },
+    {
+      "activity": "ลาไปรับปริญญา",
+      "date": "24/11/2568",
+      "dayType": "use",
+      "id": 1763956254814,
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "Support Case",
+      "date": "18/11/2568",
+      "dayType": "weekday",
+      "id": 1764209004986,
+      "type": "earn",
+      "value": 3
+    },
+    {
+      "activity": "Support Case",
+      "date": "19/11/2568",
+      "dayType": "weekday",
+      "id": 1764209027114,
+      "type": "earn",
+      "value": 2.25
+    },
+    {
+      "activity": "Support Case",
+      "date": "20/11/2568",
+      "dayType": "weekday",
+      "id": 1764209040709,
+      "type": "earn",
+      "value": 2.25
+    },
+    {
+      "activity": "Support Case",
+      "date": "21/11/2568",
+      "dayType": "weekday",
+      "id": 1764209156123,
+      "type": "earn",
+      "value": 1.5
+    },
+    {
+      "activity": "Support Case",
+      "date": "22/11/2568",
+      "dayType": "weekday",
+      "id": 1764209209810,
+      "type": "earn",
+      "value": 2.25
+    },
+    {
+      "activity": "Support Case",
+      "date": "24/11/2568",
+      "dayType": "weekday",
+      "id": 1764209222233,
+      "type": "earn",
+      "value": 3
+    },
+    {
+      "activity": "Support Production Case",
+      "date": "6/12/2568",
+      "dayType": "weekend",
+      "id": 1765013784208,
+      "timestamp": 1765013784208,
+      "type": "earn",
+      "value": 7
+    },
+    {
+      "activity": "ลาไปเที่ยวโคราช",
+      "date": "19/12/2568",
+      "dayType": "use",
+      "id": 1765859292400,
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "ลาพักผ่อน",
+      "date": "23/12/2568",
+      "dayType": "use",
+      "id": 1766472040551,
+      "type": "use",
+      "value": -15
+    },
+    {
+      "activity": "08/01/2026: ลาไปทำธุระส่วนตัว",
+      "date": "23/2/2569",
+      "dayType": "use",
+      "formatted": "[08/01/2026: ลาไปทำธุระส่วนตัว] วันที่ 23/2/2569 [ใช้ 7 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [13 ชั่วโมง 15 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
+      "id": 1771830016822,
+      "meta": {
+        "afterHours": 5.75,
+        "beforeHours": 13.25,
+        "spentHours": 7.5
+      },
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "Support OTC Production",
+      "date": "23/2/2569",
+      "dayType": "weekend",
+      "id": 1771830046992,
+      "type": "earn",
+      "value": 7
+    },
+    {
+      "activity": "30/01/2026: ลาไปทำธุระส่วนตัว",
+      "date": "23/2/2569",
+      "dayType": "use",
+      "formatted": "[30/01/2026: ลาไปทำธุระส่วนตัว] วันที่ 23/2/2569 [ใช้ 7 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [12 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 15 นาที] #Leave",
+      "id": 1771830076665,
+      "meta": {
+        "afterHours": 5.25,
+        "beforeHours": 12.75,
+        "spentHours": 7.5
+      },
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "02/02/2026: ลาครึ่งบ่ายไปทำธุระ",
+      "date": "23/2/2569",
+      "dayType": "use",
+      "formatted": "[02/02/2026: ลาครึ่งบ่ายไปทำธุระ] วันที่ 23/2/2569 [ใช้ 4 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [5 ชั่วโมง 15 นาที] เหลือ [1 ชั่วโมง 15 นาที] #Leave",
+      "id": 1771830166737,
+      "meta": {
+        "afterHours": 1.25,
+        "beforeHours": 5.25,
+        "spentHours": 4
+      },
+      "type": "use",
+      "value": -4
+    },
+    {
+      "activity": "Support OTC Production",
+      "date": "23/2/2569",
+      "dayType": "weekend",
+      "id": 1771830292258,
+      "type": "earn",
+      "value": 7
+    },
+    {
+      "activity": "Deploy OTC LE Production",
+      "date": "23/2/2569",
+      "dayType": "weekday",
+      "id": 1771830433095,
+      "type": "earn",
+      "value": 3
+    },
+    {
+      "activity": "Deploy OTC LE Production",
+      "date": "23/2/2569",
+      "dayType": "weekday",
+      "id": 1771830457207,
+      "type": "earn",
+      "value": 1.5
+    },
+    {
+      "activity": "ลาพักผ่อน",
+      "date": "27/2/2569",
+      "dayType": "use",
+      "formatted": "[ลาพักผ่อน] วันที่ 27/2/2569 [ใช้ 7 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [12 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 15 นาที] #Leave",
+      "id": 1772158179455,
+      "meta": {
+        "afterHours": 5.25,
+        "beforeHours": 12.75,
+        "spentHours": 7.5
+      },
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "OT Support OTC Production",
+      "date": "4/3/2569",
+      "dayType": "weekend",
+      "id": 1772589491091,
+      "type": "earn",
+      "value": 7
+    },
+    {
+      "activity": "OT Deploy Prod",
+      "date": "30/3/2569",
+      "dayType": "weekday",
+      "id": 1774836421940,
+      "type": "earn",
+      "value": 1.5
+    },
+    {
+      "activity": "Clear",
+      "date": "30/3/2569",
+      "dayType": "use",
+      "formatted": "[Clear] วันที่ 30/3/2569 [ใช้ 1 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [13 ชั่วโมง 45 นาที] เหลือ [12 ชั่วโมง 15 นาที] #Leave",
+      "id": 1774836449053,
+      "meta": {
+        "afterHours": 12.25,
+        "beforeHours": 13.75,
+        "spentHours": 1.5
+      },
+      "type": "use",
+      "value": -1.5
+    },
+    {
+      "activity": "OT Deploy Prod",
+      "date": "30/3/2569",
+      "dayType": "weekday",
+      "id": 1774836466330,
+      "type": "earn",
+      "value": 1.5
+    },
+    {
+      "activity": "Clear",
+      "date": "30/3/2569",
+      "dayType": "use",
+      "formatted": "[Clear] วันที่ 30/3/2569 [ใช้ 0 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [13 ชั่วโมง 45 นาที] เหลือ [13 ชั่วโมง 15 นาที] #Leave",
+      "id": 1774836473672,
+      "meta": {
+        "afterHours": 13.25,
+        "beforeHours": 13.75,
+        "spentHours": 0.5
+      },
+      "type": "use",
+      "value": -0.5
+    },
+    {
+      "activity": "ลาไปนอน",
+      "date": "9/4/2569",
+      "dayType": "use",
+      "formatted": "[ลาไปนอน] วันที่ 9/4/2569 [ใช้ 7 ชั่วโมง 30 นาที] ใช้วันหยุด OT จาก [13 ชั่วโมง 15 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
+      "id": 1775712667782,
+      "meta": {
+        "afterHours": 5.75,
+        "beforeHours": 13.25,
+        "spentHours": 7.5
+      },
+      "type": "use",
+      "value": -7.5
+    },
+    {
+      "activity": "ทดสอบ",
+      "date": "15/4/2569",
+      "dayType": "weekday",
+      "id": 1776222247635,
+      "timestamp": 1776222247635,
+      "type": "earn",
+      "value": 3
+    },
+    {
+      "activity": "ทดสอบ",
+      "date": "15/4/2569",
+      "dayType": "use",
+      "formatted": "[ทดสอบ] วันที่ 15/4/2569 [ใช้ 3 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [8 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
+      "id": 1776222261685,
+      "meta": {
+        "afterHours": 5.75,
+        "beforeHours": 8.75,
+        "spentHours": 3
+      },
+      "timestamp": 1776222261685,
+      "type": "use",
+      "value": -3
+    },
+    {
+      "activity": "ทดสอบ",
+      "date": "15/4/2569",
+      "dayType": "weekday",
+      "id": 1776224957199,
+      "timestamp": 1776224957199,
+      "type": "earn",
+      "value": 3
+    },
+    {
+      "activity": "ทดสอบ",
+      "date": "15/4/2569",
+      "dayType": "use",
+      "formatted": "[ทดสอบ] วันที่ 15/4/2569 [ใช้ 3 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [8 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
+      "id": 1776224966790,
+      "meta": {
+        "afterHours": 5.75,
+        "beforeHours": 8.75,
+        "spentHours": 3
+      },
+      "timestamp": 1776224966790,
+      "type": "use",
+      "value": -3
+    }
+  ],
+  "lastUpdate": "15/4/2569 10:49:26"
+}

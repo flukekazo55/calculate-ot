@@ -29,6 +29,8 @@ dist/
 build/
 .cache/
 .tmp/
+backend/bin/
+backend/*.exe
 
 # Backup files
 *.bak

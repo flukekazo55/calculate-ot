@@ -1,16 +1,16 @@
 -- Import OT payload JSON into Supabase/PostgreSQL.
 -- Required psql variable:
---   ot_payload -> compact JSON string from data.json
+--   ot_payload -> compact JSON string from db/current_data.json (or any payload JSON)
 -- Optional psql variable:
 --   ot_row_id  -> row key (default: singleton)
 --
 -- Example (PowerShell):
---   $json = (Get-Content data.json -Raw | ConvertFrom-Json | ConvertTo-Json -Compress)
+--   $json = (Get-Content db/current_data.json -Raw | ConvertFrom-Json | ConvertTo-Json -Compress)
 --   psql "$env:DATABASE_URL" -f db/schema.sql
 --   psql "$env:DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 --
 -- Example (bash):
---   json="$(jq -c . data.json)"
+--   json="$(jq -c . db/current_data.json)"
 --   psql "$DATABASE_URL" -f db/schema.sql
 --   psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
 

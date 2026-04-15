@@ -3,12 +3,12 @@
   "info": {
     "title": "Calculate OT API",
     "version": "1.0.0",
-    "description": "API for OT data load/save/reset/sync."
+    "description": "Go backend API for OT data load/save/reset."
   },
   "servers": [
     {
-      "url": "/",
-      "description": "Same-origin deployment (Netlify/Render/local)"
+      "url": "http://localhost:3000",
+      "description": "Local Go backend"
     }
   ],
   "paths": {
@@ -127,44 +127,6 @@
           }
         }
       }
-    },
-    "/sync": {
-      "post": {
-        "summary": "Sync OT data to git (may be disabled)",
-        "operationId": "syncData",
-        "responses": {
-          "200": {
-            "description": "Sync success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SyncResponse"
-                }
-              }
-            }
-          },
-          "501": {
-            "description": "Sync disabled in current deployment",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -231,30 +193,6 @@
           "records",
           "lastUpdate"
         ]
-      },
-      "SyncResponse": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string"
-          },
-          "pullOutput": {
-            "type": "string"
-          },
-          "pushOutput": {
-            "type": "string"
-          },
-          "commitOutput": {
-            "type": "string"
-          },
-          "syncedData": {
-            "$ref": "#/components/schemas/OTData"
-          }
-        },
-        "required": [
-          "message"
-        ],
-        "additionalProperties": true
       },
       "ErrorResponse": {
         "type": "object",

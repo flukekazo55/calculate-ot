@@ -1,17 +1,17 @@
 {
   "name": "ot-tracker",
   "version": "1.0.0",
-  "main": "server.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "test": "cd backend && go test ./...",
+    "backend:start": "cd backend && go run ./cmd/server",
+    "backend:test": "cd backend && go test ./...",
+    "frontend:start": "npm --prefix frontend start",
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:watch": "npm --prefix frontend run watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "โปรเจกต์เว็บแอปพลิเคชันสำหรับคำนวณและบันทึกเวลาทำงานล่วงเวลา (OT) พร้อมระบบเก็บข้อมูลลงไฟล์ `data.json` โดยใช้ Node.js และ Express ตกแต่งด้วยโทนสีเขียว และฟอนต์ Kanit จาก Google Fonts",
-  "dependencies": {
-    "express": "^5.1.0",
-    "pg": "^8.18.0"
-  }
+  "description": "Calculate OT workspace with separated Angular frontend and Go backend."
 }

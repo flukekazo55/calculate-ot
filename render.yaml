@@ -1,13 +1,11 @@
 services:
   - type: web
     name: calculate-ot-backend
-    env: node
+    env: go
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: go build -o backend/bin/server ./backend/cmd/server
+    startCommand: ./backend/bin/server
     autoDeploy: true
     envVars:
-      - key: NODE_VERSION
-        value: 22
-      - key: ENABLE_GIT_SYNC
-        value: false
+      - key: GO_VERSION
+        value: 1.25.5

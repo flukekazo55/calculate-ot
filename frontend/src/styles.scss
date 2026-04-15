@@ -136,15 +136,6 @@ select {
   transform: scale(1.03);
 }
 
-.time-input::-webkit-calendar-picker-indicator {
-  position: absolute;
-  inset: 0;
-  width: auto;
-  height: auto;
-  opacity: 0;
-  cursor: pointer;
-}
-
 .history-list {
   min-height: 22rem;
 }
@@ -267,22 +258,6 @@ select {
   font-size: 1.4rem;
 }
 
-.swal2-popup {
-  border-radius: 1rem !important;
-  font-family: "Kanit", system-ui, sans-serif !important;
-}
-
-.swal2-confirm {
-  background: var(--primary) !important;
-  box-shadow: none !important;
-}
-
-.swal2-cancel {
-  background: var(--surface-container-highest) !important;
-  color: var(--on-surface) !important;
-  box-shadow: none !important;
-}
-
 @media (max-width: 768px) {
   .history-item__top,
   .history-meta {
@@ -294,3 +269,4 @@ select {
     display: none;
   }
 }
+
