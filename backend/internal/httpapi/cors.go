@@ -6,6 +6,7 @@ var (
 	localhostOriginPattern = regexp.MustCompile(`(?i)^http://localhost(?::\d+)?$`)
 	loopbackOriginPattern  = regexp.MustCompile(`(?i)^http://127\.0\.0\.1(?::\d+)?$`)
 	githubIOOriginPattern  = regexp.MustCompile(`(?i)^https://[a-z0-9-]+\.github\.io$`)
+	vercelOriginPattern    = regexp.MustCompile(`(?i)^https://[a-z0-9-]+\.vercel\.app$`)
 )
 
 // IsAllowedOrigin validates whether a request origin can access the API.
@@ -27,5 +28,6 @@ func IsAllowedOrigin(origin string, allowAll bool, configuredOrigins []string) b
 
 	return localhostOriginPattern.MatchString(origin) ||
 		loopbackOriginPattern.MatchString(origin) ||
-		githubIOOriginPattern.MatchString(origin)
+		githubIOOriginPattern.MatchString(origin) ||
+		vercelOriginPattern.MatchString(origin)
 }

@@ -49,6 +49,16 @@ func TestIsAllowedOrigin(t *testing.T) {
 			want:   true,
 		},
 		{
+			name:   "vercel default allow",
+			origin: "https://calculate-ot.vercel.app",
+			want:   true,
+		},
+		{
+			name:   "vercel lookalike blocked",
+			origin: "https://calculate-ot.vercel.app.evil.example",
+			want:   false,
+		},
+		{
 			name:   "unknown default blocked",
 			origin: "https://evil.example",
 			want:   false,
