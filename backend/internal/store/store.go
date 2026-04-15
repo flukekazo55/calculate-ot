@@ -41,3 +41,9 @@ type Repository interface {
 	Save(ctx context.Context, data OTData) (OTData, error)
 	Reset(ctx context.Context) (OTData, error)
 }
+
+// OwnerScopedRepository allows selecting an OT repository partition by owner.
+type OwnerScopedRepository interface {
+	Repository
+	ForOwner(owner string) Repository
+}

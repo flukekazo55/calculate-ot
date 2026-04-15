@@ -57,5 +57,59 @@
     "alertCloseAria": "ปิดการแจ้งเตือน",
     "startTimePickerAria": "ตัวเลือกเวลาเริ่ม",
     "endTimePickerAria": "ตัวเลือกเวลาสิ้นสุด"
+  },
+  "auth": {
+    "shared": {
+      "brand": "CALCULATE OT",
+      "language": "ภาษา",
+      "english": "อังกฤษ",
+      "thai": "ไทย",
+      "password": "รหัสผ่าน",
+      "passwordPlaceholder": "********",
+      "errors": {
+        "backendUnavailable": "ไม่สามารถเชื่อมต่อ Backend API ได้"
+      }
+    },
+    "login": {
+      "title": "ยินดีต้อนรับกลับ",
+      "identityLabel": "ชื่อผู้ใช้หรืออีเมล",
+      "identityPlaceholder": "กรอกข้อมูลเข้าสู่ระบบ",
+      "keepLoggedIn": "จดจำการเข้าสู่ระบบ",
+      "signIn": "เข้าสู่ระบบ",
+      "signingIn": "กำลังเข้าสู่ระบบ...",
+      "newUserPrompt": "ผู้ใช้ใหม่?",
+      "createAccountLink": "สร้างบัญชี",
+      "errors": {
+        "missingCredentials": "กรุณากรอกชื่อผู้ใช้/อีเมลและรหัสผ่าน",
+        "invalidCredentials": "ชื่อผู้ใช้/อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+        "unableToSignIn": "ไม่สามารถเข้าสู่ระบบได้ในขณะนี้"
+      }
+    },
+    "register": {
+      "title": "สร้างบัญชี",
+      "usernameLabel": "ชื่อผู้ใช้",
+      "usernamePlaceholder": "johndoe",
+      "emailLabel": "อีเมล",
+      "emailPlaceholder": "john@example.com",
+      "confirmPasswordLabel": "ยืนยันรหัสผ่าน",
+      "securityRequirements": "ข้อกำหนดรหัสผ่าน",
+      "requirements": {
+        "minLength": "อย่างน้อย 8 ตัวอักษร",
+        "uppercase": "ตัวพิมพ์ใหญ่",
+        "lowercase": "ตัวพิมพ์เล็ก",
+        "number": "มีตัวเลข"
+      },
+      "register": "สมัครสมาชิก",
+      "creating": "กำลังสร้างบัญชี...",
+      "haveAccountPrompt": "มีบัญชีแล้ว?",
+      "loginLink": "เข้าสู่ระบบ",
+      "errors": {
+        "requiredFields": "กรุณากรอกข้อมูลให้ครบถ้วน",
+        "passwordMismatch": "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน",
+        "passwordRequirements": "รหัสผ่านต้องผ่านข้อกำหนดทั้งหมด",
+        "duplicateIdentity": "ชื่อผู้ใช้หรืออีเมลนี้มีอยู่แล้ว",
+        "unableToCreate": "ไม่สามารถสร้างบัญชีได้ในขณะนี้"
+      }
+    }
   }
 }

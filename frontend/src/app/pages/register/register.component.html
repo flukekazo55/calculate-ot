@@ -1,0 +1,141 @@
+﻿<header class="w-full top-0 sticky z-50 tonal-shift bg-[#eff5f0] transition-colors duration-150 border-b border-[#aab4af]/20">
+  <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto gap-3">
+    <div class="flex items-center gap-2">
+      <span class="text-xl font-bold tracking-tight text-[#036c55] brand-font">{{ t('shared.brand') }}</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="hidden sm:inline text-[11px] font-bold uppercase tracking-wider text-[#57615d]">{{ t('shared.language') }}</span>
+      <label class="switcher" [class.switcher--en]="currentLang === 'en'" [class.switcher--th]="currentLang !== 'en'">
+        <span class="visually-hidden">{{ currentLang === 'en' ? t('shared.english') : t('shared.thai') }}</span>
+        <input class="switcher-input" type="checkbox" [checked]="currentLang === 'en'" (change)="onLanguageToggle($event)" />
+        <span class="switcher-track">
+          <span class="switcher-thumb"></span>
+        </span>
+        <span class="switcher-flag" [class.switcher-flag--en]="currentLang === 'en'" [class.switcher-flag--th]="currentLang !== 'en'" aria-hidden="true"></span>
+      </label>
+    </div>
+  </div>
+</header>
+
+<main class="min-h-[calc(100vh-170px)] flex items-center justify-center px-4 py-12 relative overflow-hidden bg-[#f6faf6] text-[#2b3530]">
+  <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full blur-[120px] bg-[#9ef3d6] opacity-20 pointer-events-none"></div>
+  <div class="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] rounded-full blur-[100px] bg-[#b7eefc] opacity-15 pointer-events-none"></div>
+
+  <div class="relative w-full max-w-md">
+    <div class="bg-white rounded-2xl p-8 md:p-10 shadow-[0_12px_32px_rgba(43,53,48,0.06)] border border-[#aab4af]/20">
+      <div class="text-center mb-10">
+        <h1 class="text-3xl font-extrabold text-[#2b3530] tracking-tight mb-2 brand-font">{{ t('register.title') }}</h1>
+      </div>
+
+      <form class="space-y-6" (ngSubmit)="submit()" #registerForm="ngForm" novalidate>
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#57615d] ml-1" for="username">{{ t('register.usernameLabel') }}</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#727d78] text-lg">person</span>
+            <input
+              class="w-full pl-12 pr-4 py-3 bg-[#e1eae5] border-none rounded-xl focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all placeholder:text-[#727d78]/50 text-[#2b3530] text-sm"
+              id="username"
+              name="username"
+              type="text"
+              [(ngModel)]="username"
+              [placeholder]="t('register.usernamePlaceholder')"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-[#57615d] ml-1" for="email">{{ t('register.emailLabel') }}</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#727d78] text-lg">mail</span>
+            <input
+              class="w-full pl-12 pr-4 py-3 bg-[#e1eae5] border-none rounded-xl focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all placeholder:text-[#727d78]/50 text-[#2b3530] text-sm"
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="email"
+              [placeholder]="t('register.emailPlaceholder')"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#57615d] ml-1" for="password">{{ t('shared.password') }}</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#727d78] text-lg">lock</span>
+              <input
+                class="w-full pl-12 pr-4 py-3 bg-[#e1eae5] border-none rounded-xl focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all placeholder:text-[#727d78]/50 text-[#2b3530] text-sm"
+                id="password"
+                name="password"
+                type="password"
+                [(ngModel)]="password"
+                [placeholder]="t('shared.passwordPlaceholder')"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="bg-[#eff5f0] rounded-xl p-4 space-y-3">
+            <p class="text-[11px] font-bold text-[#57615d] uppercase tracking-widest mb-1">{{ t('register.securityRequirements') }}</p>
+            <div class="grid grid-cols-2 gap-2">
+              <div class="flex items-center gap-2" [style.color]="hasMinLength ? '#036c55' : '#57615d'">
+                <span class="material-symbols-outlined text-[16px]">{{ hasMinLength ? 'check_circle' : 'circle' }}</span>
+                <span class="text-[12px] font-medium">{{ t('register.requirements.minLength') }}</span>
+              </div>
+              <div class="flex items-center gap-2" [style.color]="hasUppercase ? '#036c55' : '#57615d'">
+                <span class="material-symbols-outlined text-[16px]">{{ hasUppercase ? 'check_circle' : 'circle' }}</span>
+                <span class="text-[12px] font-medium">{{ t('register.requirements.uppercase') }}</span>
+              </div>
+              <div class="flex items-center gap-2" [style.color]="hasLowercase ? '#036c55' : '#57615d'">
+                <span class="material-symbols-outlined text-[16px]">{{ hasLowercase ? 'check_circle' : 'circle' }}</span>
+                <span class="text-[12px] font-medium">{{ t('register.requirements.lowercase') }}</span>
+              </div>
+              <div class="flex items-center gap-2" [style.color]="hasNumber ? '#036c55' : '#57615d'">
+                <span class="material-symbols-outlined text-[16px]">{{ hasNumber ? 'check_circle' : 'circle' }}</span>
+                <span class="text-[12px] font-medium">{{ t('register.requirements.number') }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-[#57615d] ml-1" for="confirm-password">{{ t('register.confirmPasswordLabel') }}</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#727d78] text-lg">enhanced_encryption</span>
+              <input
+                class="w-full pl-12 pr-4 py-3 bg-[#e1eae5] border-none rounded-xl focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all placeholder:text-[#727d78]/50 text-[#2b3530] text-sm"
+                id="confirm-password"
+                name="confirmPassword"
+                type="password"
+                [(ngModel)]="confirmPassword"
+                [placeholder]="t('shared.passwordPlaceholder')"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <p *ngIf="error" class="rounded-lg bg-[#fa746f]/15 text-[#6e0a12] px-3 py-2 text-sm font-medium">{{ error }}</p>
+
+        <div class="pt-4">
+          <button
+            class="w-full bg-[#036c55] text-[#e4fff3] py-4 rounded-xl font-bold text-sm tracking-wide shadow-lg shadow-[#036c55]/10 hover:shadow-[#036c55]/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            type="submit"
+            [disabled]="loading"
+          >
+            {{ loading ? t('register.creating') : t('register.register') }}
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 text-center">
+        <p class="text-sm text-[#57615d]">
+          {{ t('register.haveAccountPrompt') }}
+          <a routerLink="/login" class="text-[#036c55] font-bold hover:underline ml-1">{{ t('register.loginLink') }}</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>

@@ -57,5 +57,59 @@
     "alertCloseAria": "Close alert",
     "startTimePickerAria": "Start time picker",
     "endTimePickerAria": "End time picker"
+  },
+  "auth": {
+    "shared": {
+      "brand": "CALCULATE OT",
+      "language": "Language",
+      "english": "English",
+      "thai": "Thai",
+      "password": "Password",
+      "passwordPlaceholder": "********",
+      "errors": {
+        "backendUnavailable": "Cannot connect to backend API."
+      }
+    },
+    "login": {
+      "title": "Welcome back",
+      "identityLabel": "Username or Email",
+      "identityPlaceholder": "Enter your credentials",
+      "keepLoggedIn": "Keep me logged in",
+      "signIn": "Sign In",
+      "signingIn": "Signing In...",
+      "newUserPrompt": "New to User?",
+      "createAccountLink": "Create an account",
+      "errors": {
+        "missingCredentials": "Please enter both identity and password.",
+        "invalidCredentials": "Invalid username/email or password.",
+        "unableToSignIn": "Unable to sign in right now."
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "johndoe",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "john@example.com",
+      "confirmPasswordLabel": "Confirm Password",
+      "securityRequirements": "Security Requirements",
+      "requirements": {
+        "minLength": "8+ Characters",
+        "uppercase": "Uppercase",
+        "lowercase": "Lowercase",
+        "number": "One Number"
+      },
+      "register": "Register",
+      "creating": "Creating Account...",
+      "haveAccountPrompt": "Already have an account?",
+      "loginLink": "Log In",
+      "errors": {
+        "requiredFields": "Please complete all required fields.",
+        "passwordMismatch": "Password confirmation does not match.",
+        "passwordRequirements": "Password must meet all security requirements.",
+        "duplicateIdentity": "Username or email already exists.",
+        "unableToCreate": "Unable to create account right now."
+      }
+    }
   }
 }

@@ -7,14 +7,13 @@ Separated OT application with:
 
 Frontend CRUD is localStorage-first, then mirrored to backend API.
 Backend persistence behavior:
-- Without `DATABASE_URL`: save to `data.json`
-- With `DATABASE_URL`: save to both PostgreSQL and `data.json`
+- Backend requires `MONGODB_URI` and persists OT/Auth data in MongoDB only
 
 ## Project Structure
 
 - `frontend/` Angular UI
 - `backend/` Go API (`/load`, `/save`, `/reset`)
-- `db/` SQL helpers for PostgreSQL setup/import
+- `db/` legacy SQL helper files (not used in MongoDB-only mode)
 - `openapi.json` API schema
 - `swagger.html` local Swagger UI page for `openapi.json`
 
@@ -41,12 +40,13 @@ window.__APP_CONFIG = Object.assign({}, window.__APP_CONFIG, {
 });
 ```
 
-3. (Optional) Set backend environment variables.
+3. Set backend environment variables.
 
 PowerShell:
 
 ```powershell
-$env:DATABASE_URL = "postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require"
+$env:MONGODB_URI = "mongodb+srv://<user>:<password>@<cluster>/<optional-db>?retryWrites=true&w=majority"
+$env:MONGODB_DB = "calculate_ot"
 $env:PORT = "3000"
 $env:CORS_ORIGINS = "http://localhost:4200"
 ```
@@ -54,7 +54,8 @@ $env:CORS_ORIGINS = "http://localhost:4200"
 bash:
 
 ```bash
-export DATABASE_URL="postgresql://<user>:<password>@<host>:5432/<db>?sslmode=require"
+export MONGODB_URI="mongodb+srv://<user>:<password>@<cluster>/<optional-db>?retryWrites=true&w=majority"
+export MONGODB_DB="calculate_ot"
 export PORT="3000"
 export CORS_ORIGINS="http://localhost:4200"
 ```
@@ -106,11 +107,12 @@ npm run frontend:build
 ## Backend Environment Variables
 
 - `PORT` (default: `3000`)
-- `DATABASE_URL` (enable PostgreSQL mode when set)
+- `MONGODB_URI` (required)
+- `MONGODB_DB` (default: `calculate_ot`)
 - `OT_TABLE_NAME` (default: `ot_data`)
 - `OT_ROW_ID` (default: `singleton`)
+- `USERS_TABLE_NAME` (default: `users`)
 - `CORS_ORIGINS` (comma-separated allowlist, e.g. `http://localhost:4200,https://flukekazo55.github.io`)
-- `DATA_FILE` (default: `data.json`)
 
 ## API Routes
 
@@ -118,11 +120,12 @@ npm run frontend:build
 - `GET /load` -> load current OT payload
 - `POST /save` -> save payload
 - `POST /reset` -> reset to empty payload
+- `POST /auth/register` -> create user (`username`, `email`, `password`)
+- `POST /auth/login` -> login with `identity` (username/email) and `password`
 
 Notes:
 - Frontend reads/writes localStorage first (`otRecords`, `otLastUpdate`).
-- API `/save` mirrors the same payload to backend storage.
-- In PostgreSQL mode, backend dual-writes to DB and JSON file.
+- API `/save` writes the same payload to MongoDB.
 
 ## Frontend Deploy (Static Host)
 
@@ -145,38 +148,9 @@ Set deployed backend URL in `frontend/public/config.js` before building.
 
 Recommended env vars:
 
-- `DATABASE_URL=<supabase-postgres-connection-string>`
+- `MONGODB_URI=<mongodb-connection-string>`
+- `MONGODB_DB=calculate_ot`
 - `CORS_ORIGINS=https://<your-frontend-domain>`
-
-## PostgreSQL Schema and Import
-
-Files:
-
-- `db/schema.sql`
-- `db/import_data.sql`
-- `db/current_data.json`
-
-Create schema:
-
-```bash
-psql "$DATABASE_URL" -f db/schema.sql
-```
-
-Import current snapshot:
-
-PowerShell:
-
-```powershell
-$json = (Get-Content db/current_data.json -Raw | ConvertFrom-Json | ConvertTo-Json -Compress)
-psql "$env:DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
-```
-
-bash:
-
-```bash
-json="$(jq -c . db/current_data.json)"
-psql "$DATABASE_URL" -v ot_payload="$json" -f db/import_data.sql
-```
 
 ## Author
 
