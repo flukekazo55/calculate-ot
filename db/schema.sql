@@ -13,3 +13,18 @@ CREATE TABLE IF NOT EXISTS ot_data (
 
 CREATE INDEX IF NOT EXISTS idx_ot_data_updated_at
   ON ot_data (updated_at DESC);
+
+-- Users table for register/login.
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  username TEXT NOT NULL,
+  email TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_username_lower
+  ON users ((LOWER(username)));
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email_lower
+  ON users ((LOWER(email)));

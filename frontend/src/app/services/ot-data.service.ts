@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
 export type DayType = 'weekday' | 'weekend' | 'holiday' | 'use';
 export type RecordType = 'earn' | 'use';
@@ -40,7 +41,10 @@ export interface ResetResponse {
 
 @Injectable({ providedIn: 'root' })
 export class OtDataService {
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly auth: AuthService,
+  ) {}
 
   loadData(apiBase: string): Observable<OtDataPayload> {
     return this.http.get<OtDataPayload>(this.buildApiUrl(apiBase, 'load'));
@@ -56,7 +60,9 @@ export class OtDataService {
 
   private buildApiUrl(apiBase: string, path: string): string {
     const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
-    if (!apiBase) return `./${normalizedPath}`;
-    return `${apiBase}/${normalizedPath}`;
+    const url = !apiBase ? `./${normalizedPath}` : `${apiBase}/${normalizedPath}`;
+    const owner = this.auth.currentUser?.username?.trim() || '';
+    if (!owner) return url;
+    return `${url}?username=${encodeURIComponent(owner)}`;
   }
 }

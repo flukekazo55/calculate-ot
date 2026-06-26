@@ -1,0 +1,16 @@
+[
+  {
+    "id": "53cff62f036d618a30970ff0e51bedb1",
+    "username": "flukekazo55",
+    "email": "flukekazo55@gmail.com",
+    "passwordHash": "$2a$10$W5UepjZwVb7NBiWeEeRo4.KgfchehBnMRWzTGVO36qMg8Zvc2a47G",
+    "createdAt": "2026-04-15T12:42:00Z"
+  },
+  {
+    "id": "28704b62494f6a3060566183e689289b",
+    "username": "test",
+    "email": "test@abc.com",
+    "passwordHash": "$2a$10$rDp/HggSarnBZCYOZ9pLZuCxZ8q6QMz6ALEcNvEyEsyRUnSljXIiO",
+    "createdAt": "2026-04-15T12:43:12Z"
+  }
+]

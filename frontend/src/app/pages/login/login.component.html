@@ -1,0 +1,101 @@
+﻿<div class="min-h-screen bg-[#f6faf6] text-[#2b3530] flex flex-col items-center justify-center p-6 selection:bg-[#9ef3d6]">
+  <header class="w-full top-0 fixed bg-[#f6faf6] z-50 border-b border-[#aab4af]/10">
+    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto gap-3">
+      <div class="text-xl font-bold tracking-tight text-[#036c55] headline-font">{{ t('shared.brand') }}</div>
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline text-[11px] font-bold uppercase tracking-wider text-[#57615d]">{{ t('shared.language') }}</span>
+        <label class="switcher" [class.switcher--en]="currentLang === 'en'" [class.switcher--th]="currentLang !== 'en'">
+          <span class="visually-hidden">{{ currentLang === 'en' ? t('shared.english') : t('shared.thai') }}</span>
+          <input class="switcher-input" type="checkbox" [checked]="currentLang === 'en'" (change)="onLanguageToggle($event)" />
+          <span class="switcher-track">
+            <span class="switcher-thumb"></span>
+          </span>
+          <span class="switcher-flag" [class.switcher-flag--en]="currentLang === 'en'" [class.switcher-flag--th]="currentLang !== 'en'" aria-hidden="true"></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <div class="fixed inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-[#9ef3d6]/20 blur-3xl"></div>
+    <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[#b7eefc]/10 blur-3xl"></div>
+  </div>
+
+  <main class="w-full max-w-md relative z-10 pt-20">
+    <div class="text-center mb-10">
+      <div class="inline-flex items-center justify-center px-5 py-3 rounded-2xl bg-[#9ef3d6] text-[#036c55] mb-6 shadow-[0_8px_20px_rgba(3,108,85,0.12)]">
+        <span class="headline-font text-sm font-extrabold tracking-wider">{{ webTitle }}</span>
+      </div>
+      <h1 class="headline-font text-3xl font-extrabold text-[#2b3530] tracking-tight mb-2">{{ t('login.title') }}</h1>
+    </div>
+
+    <div class="bg-white rounded-2xl p-8 shadow-[0_12px_32px_rgba(43,53,48,0.06)] ghost-border">
+      <form class="space-y-6" (ngSubmit)="submit()" #loginForm="ngForm" novalidate>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-[#57615d] px-1" for="identity">{{ t('login.identityLabel') }}</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#727d78]">
+              <span class="material-symbols-outlined text-lg">alternate_email</span>
+            </div>
+            <input
+              class="block w-full pl-11 pr-4 py-3.5 bg-[#e1eae5] border-none rounded-xl text-[#2b3530] placeholder:text-[#727d78] focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all duration-200 outline-none"
+              id="identity"
+              name="identity"
+              type="text"
+              [(ngModel)]="identity"
+              [placeholder]="t('login.identityPlaceholder')"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex justify-between items-center px-1">
+            <label class="block text-sm font-medium text-[#57615d]" for="password">{{ t('shared.password') }}</label>
+          </div>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[#727d78]">
+              <span class="material-symbols-outlined text-lg">lock</span>
+            </div>
+            <input
+              class="block w-full pl-11 pr-4 py-3.5 bg-[#e1eae5] border-none rounded-xl text-[#2b3530] placeholder:text-[#727d78] focus:ring-2 focus:ring-[#036c55]/20 focus:bg-white transition-all duration-200 outline-none"
+              id="password"
+              name="password"
+              type="password"
+              [(ngModel)]="password"
+              [placeholder]="t('shared.passwordPlaceholder')"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="flex items-center px-1">
+          <input
+            class="h-4 w-4 rounded border-[#aab4af] text-[#036c55] focus:ring-[#036c55]/20 bg-white"
+            id="remember-me"
+            name="remember-me"
+            type="checkbox"
+            [(ngModel)]="rememberMe"
+          />
+          <label class="ml-2 block text-sm text-[#57615d]" for="remember-me">{{ t('login.keepLoggedIn') }}</label>
+        </div>
+
+        <p *ngIf="error" class="rounded-lg bg-[#fa746f]/15 text-[#6e0a12] px-3 py-2 text-sm font-medium">{{ error }}</p>
+
+        <button
+          class="w-full bg-[#036c55] text-[#e4fff3] py-4 px-6 rounded-xl font-bold headline-font text-lg shadow-lg shadow-[#036c55]/10 hover:bg-[#005f4a] active:scale-[0.98] transition-all duration-150 flex items-center justify-center gap-2 disabled:opacity-60"
+          type="submit"
+          [disabled]="loading"
+        >
+          {{ loading ? t('login.signingIn') : t('login.signIn') }}
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </button>
+      </form>
+    </div>
+
+    <p class="mt-8 text-center text-[#57615d] font-medium">
+      {{ t('login.newUserPrompt') }}
+      <a routerLink="/register" class="text-[#036c55] font-bold hover:underline ml-1">{{ t('login.createAccountLink') }}</a>
+    </p>
+  </main>
+</div>

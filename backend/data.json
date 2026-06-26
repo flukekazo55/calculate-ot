@@ -250,55 +250,7 @@
       },
       "type": "use",
       "value": -7.5
-    },
-    {
-      "activity": "ทดสอบ",
-      "date": "15/4/2569",
-      "dayType": "weekday",
-      "id": 1776222247635,
-      "timestamp": 1776222247635,
-      "type": "earn",
-      "value": 3
-    },
-    {
-      "activity": "ทดสอบ",
-      "date": "15/4/2569",
-      "dayType": "use",
-      "formatted": "[ทดสอบ] วันที่ 15/4/2569 [ใช้ 3 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [8 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
-      "id": 1776222261685,
-      "meta": {
-        "afterHours": 5.75,
-        "beforeHours": 8.75,
-        "spentHours": 3
-      },
-      "timestamp": 1776222261685,
-      "type": "use",
-      "value": -3
-    },
-    {
-      "activity": "ทดสอบ",
-      "date": "15/4/2569",
-      "dayType": "weekday",
-      "id": 1776224957199,
-      "timestamp": 1776224957199,
-      "type": "earn",
-      "value": 3
-    },
-    {
-      "activity": "ทดสอบ",
-      "date": "15/4/2569",
-      "dayType": "use",
-      "formatted": "[ทดสอบ] วันที่ 15/4/2569 [ใช้ 3 ชั่วโมง 0 นาที] ใช้วันหยุด OT จาก [8 ชั่วโมง 45 นาที] เหลือ [5 ชั่วโมง 45 นาที] #Leave",
-      "id": 1776224966790,
-      "meta": {
-        "afterHours": 5.75,
-        "beforeHours": 8.75,
-        "spentHours": 3
-      },
-      "timestamp": 1776224966790,
-      "type": "use",
-      "value": -3
     }
   ],
-  "lastUpdate": "15/4/2569 10:49:26"
+  "lastUpdate": "9/4/2569"
 }

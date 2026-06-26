@@ -2,17 +2,17 @@ package config
 
 import (
 	"os"
-	"path/filepath"
 	"strings"
 )
 
 // Config represents runtime settings for the OT backend service.
 type Config struct {
 	Port            string
-	DatabaseURL     string
+	MongoURI        string
+	MongoDatabase   string
 	TableName       string
 	RowID           string
-	DataFile        string
+	UserTableName   string
 	CORSOrigins     []string
 	AllowAllOrigins bool
 }
@@ -29,36 +29,36 @@ func FromEnv() Config {
 		tableName = "ot_data"
 	}
 
+	userTableName := strings.TrimSpace(os.Getenv("USERS_TABLE_NAME"))
+	if userTableName == "" {
+		userTableName = "users"
+	}
+
 	rowID := strings.TrimSpace(os.Getenv("OT_ROW_ID"))
 	if rowID == "" {
 		rowID = "singleton"
 	}
 
-	dataFile := resolveDataFile()
 	origins, allowAll := parseOrigins(os.Getenv("CORS_ORIGINS"))
 
 	return Config{
 		Port:            port,
-		DatabaseURL:     strings.TrimSpace(os.Getenv("DATABASE_URL")),
+		MongoURI:        strings.TrimSpace(os.Getenv("MONGODB_URI")),
+		MongoDatabase:   resolveMongoDatabase(),
 		TableName:       tableName,
 		RowID:           rowID,
-		DataFile:        dataFile,
+		UserTableName:   userTableName,
 		CORSOrigins:     origins,
 		AllowAllOrigins: allowAll,
 	}
 }
 
-func resolveDataFile() string {
-	dataFile := strings.TrimSpace(os.Getenv("DATA_FILE"))
-	if dataFile != "" {
-		return dataFile
+func resolveMongoDatabase() string {
+	database := strings.TrimSpace(os.Getenv("MONGODB_DB"))
+	if database != "" {
+		return database
 	}
-
-	if os.Getenv("VERCEL") == "1" || strings.TrimSpace(os.Getenv("VERCEL_ENV")) != "" {
-		return filepath.Join(os.TempDir(), "calculate-ot-data.json")
-	}
-
-	return "data.json"
+	return "calculate_ot"
 }
 
 func parseOrigins(originsRaw string) ([]string, bool) {
