@@ -1,4 +1,4 @@
-<div class="min-h-screen bg-[#f6faf6] pb-10 text-[#2b3530]">
+<div class="min-h-screen bg-[#f3f8f7] pb-10 text-[#38463f]">
   <section class="alert-stack" aria-live="polite" aria-atomic="true">
     <article
       *ngFor="let alert of alerts; trackBy: trackByAlertId"
@@ -38,15 +38,15 @@
     </article>
   </section>
 
-  <header class="tonal-shift-bg sticky top-0 z-40 w-full border-b border-[#aab4af]/20 bg-[#f6faf6]/90 backdrop-blur">
+  <header class="tonal-shift-bg sticky top-0 z-40 w-full border-b border-[#bcd2c8]/40 bg-[#f3f8f7]/90 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
       <div class="flex items-center gap-3">
-        <span class="material-symbols-outlined rounded-lg bg-[#9ef3d6] p-2 text-[#006b54]" aria-hidden="true">timelapse</span>
-        <span class="text-xl font-bold text-[#006b54]">{{ t('appTitle') }}</span>
+        <span class="material-symbols-outlined rounded-lg bg-[#c4ecdc] p-2 text-[#17795d]" aria-hidden="true">timelapse</span>
+        <span class="text-xl font-bold text-[#17795d]">{{ t('appTitle') }}</span>
       </div>
 
       <div class="language-cluster flex items-center gap-2">
-        <span class="action-label text-[11px] font-bold uppercase tracking-wider text-[#57615d]">{{ t('languageLabel') }}</span>
+        <span class="action-label text-[11px] font-bold uppercase tracking-wider text-[#6a7a72]">{{ t('languageLabel') }}</span>
         <label class="switcher" [class.switcher--en]="currentLang === 'en'" [class.switcher--th]="currentLang !== 'en'">
           <span class="visually-hidden">{{ currentLang === 'en' ? t('langEnglish') : t('langThai') }}</span>
           <input class="switcher-input" type="checkbox" [checked]="currentLang === 'en'" (change)="onLanguageToggle($event)" />
@@ -61,52 +61,52 @@
 
   <main class="mx-auto max-w-7xl px-6 py-8">
     <section class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-      <div class="rounded-2xl border border-[#aab4af]/30 bg-white p-6 shadow-sm">
+      <div class="rounded-2xl border border-[#bcd2c8]/60 bg-white p-6 shadow-sm">
         <div class="mb-2 flex items-start justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-[#57615d]">{{ t('entryCountLabel') }}</p>
-          <span class="material-symbols-outlined text-[#006b54]" aria-hidden="true">checklist</span>
+          <p class="text-xs font-bold uppercase tracking-wider text-[#6a7a72]">{{ t('entryCountLabel') }}</p>
+          <span class="material-symbols-outlined text-[#17795d]" aria-hidden="true">checklist</span>
         </div>
         <div class="flex flex-col">
-          <h2 class="text-3xl font-extrabold text-[#006b54]">{{ records.length }}</h2>
-          <p class="mt-1 text-xs text-[#57615d]">{{ t('historyCountLabel') }}</p>
+          <h2 class="text-3xl font-extrabold text-[#17795d]">{{ records.length }}</h2>
+          <p class="mt-1 text-xs text-[#6a7a72]">{{ t('historyCountLabel') }}</p>
         </div>
       </div>
 
-      <div class="rounded-2xl border border-[#aab4af]/30 bg-white p-6 shadow-sm">
+      <div class="rounded-2xl border border-[#bcd2c8]/60 bg-white p-6 shadow-sm">
         <div class="mb-2 flex items-start justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-[#57615d]">{{ t('lastUpdateLabel') }}</p>
-          <span class="material-symbols-outlined text-[#2f6772]" aria-hidden="true">update</span>
+          <p class="text-xs font-bold uppercase tracking-wider text-[#6a7a72]">{{ t('lastUpdateLabel') }}</p>
+          <span class="material-symbols-outlined text-[#2a7180]" aria-hidden="true">update</span>
         </div>
-        <h2 class="text-lg font-bold text-[#2f6772]">{{ lastUpdateText }}</h2>
+        <h2 class="text-lg font-bold text-[#2a7180]">{{ lastUpdateText }}</h2>
       </div>
 
-      <div class="rounded-2xl bg-gradient-to-br from-[#006b54] to-[#005f4a] p-6 text-white shadow-md">
+      <div class="rounded-2xl bg-gradient-to-br from-[#bfe8d6] to-[#cfe9f1] p-6 text-[#14533f] shadow-md">
         <div class="mb-2 flex items-start justify-between">
-          <p class="text-xs font-bold uppercase tracking-wider text-[#9ef3d6]">{{ t('initBalanceLabel') }}</p>
-          <span class="material-symbols-outlined text-[#9ef3d6]" aria-hidden="true">account_balance_wallet</span>
+          <p class="text-xs font-bold uppercase tracking-wider text-[#2f7a64]">{{ t('initBalanceLabel') }}</p>
+          <span class="material-symbols-outlined text-[#1f7a5f]" aria-hidden="true">account_balance_wallet</span>
         </div>
         <h2 class="text-3xl font-extrabold">{{ totalCompactText }}</h2>
-        <p class="mt-1 text-xs text-[#9ef3d6]">{{ t('heroCaption') }}</p>
+        <p class="mt-1 text-xs text-[#2f7a64]">{{ t('heroCaption') }}</p>
       </div>
     </section>
 
     <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
       <div class="space-y-6 lg:col-span-7">
-        <section id="history-section" class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
+        <section class="rounded-2xl border border-[#bcd2c8]/50 bg-white p-5">
           <div class="mb-4 flex items-center gap-3">
-            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#9ef3d6]">
-              <span class="material-symbols-outlined text-[20px] text-[#006b54]" aria-hidden="true">add_task</span>
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#c4ecdc]">
+              <span class="material-symbols-outlined text-[20px] text-[#17795d]" aria-hidden="true">add_task</span>
             </div>
             <h2 class="text-lg font-bold">{{ t('calcCardTitle') }}</h2>
           </div>
 
           <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('dayTypeLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('dayTypeLabel') }}</label>
               <select
                 name="dayType"
                 [(ngModel)]="dayType"
-                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm focus:border-[#006b54]"
+                class="w-full rounded-lg border border-[#bcd2c8]/60 bg-white px-3 py-2 text-sm focus:border-[#17795d]"
               >
                 <option value="weekday">{{ t('dayType.weekday') }}</option>
                 <option value="weekend">{{ t('dayType.weekend') }}</option>
@@ -115,13 +115,13 @@
             </div>
 
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('activityLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('activityLabel') }}</label>
               <input
                 name="activity"
                 [(ngModel)]="activity"
                 type="text"
                 autocomplete="off"
-                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm focus:border-[#006b54]"
+                class="w-full rounded-lg border border-[#bcd2c8]/60 bg-white px-3 py-2 text-sm focus:border-[#17795d]"
                 [placeholder]="t('activityPlaceholder')"
               />
             </div>
@@ -129,7 +129,7 @@
 
           <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('startLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('startLabel') }}</label>
               <div class="timepicker-wrap">
                 <button
                   type="button"
@@ -202,7 +202,7 @@
             </div>
 
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('endLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('endLabel') }}</label>
               <div class="timepicker-wrap">
                 <button
                   type="button"
@@ -278,7 +278,7 @@
           <div class="flex flex-wrap gap-3">
             <button
               type="button"
-              class="rounded-lg bg-[#006b54] px-4 py-2 text-sm font-semibold text-white hover:bg-[#005f4a]"
+              class="rounded-lg bg-[#a6e2cb] px-4 py-2 text-sm font-semibold text-[#12563f] hover:bg-[#92d9bd]"
               (click)="calc()"
             >
               {{ t('calcBtn') }}
@@ -294,33 +294,33 @@
           </div>
         </section>
 
-        <section class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
+        <section class="rounded-2xl border border-[#bcd2c8]/50 bg-white p-5">
           <div class="mb-4 flex items-center gap-3">
-            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#b7eefc]">
-              <span class="material-symbols-outlined text-[20px] text-[#2f6772]" aria-hidden="true">event_available</span>
+            <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#cfeaf1]">
+              <span class="material-symbols-outlined text-[20px] text-[#2a7180]" aria-hidden="true">event_available</span>
             </div>
             <h2 class="text-lg font-bold">{{ t('useCardTitle') }}</h2>
           </div>
 
           <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('useTimeLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('useTimeLabel') }}</label>
               <input
                 name="useTime"
                 [(ngModel)]="useTime"
                 type="text"
-                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm"
+                class="w-full rounded-lg border border-[#bcd2c8]/60 bg-white px-3 py-2 text-sm"
                 [placeholder]="t('useTimePlaceholder')"
               />
             </div>
 
             <div class="space-y-1">
-              <label class="ml-1 text-[11px] font-bold uppercase text-[#57615d]">{{ t('useNoteLabel') }}</label>
+              <label class="ml-1 text-[11px] font-bold uppercase text-[#6a7a72]">{{ t('useNoteLabel') }}</label>
               <input
                 name="useNote"
                 [(ngModel)]="useNote"
                 type="text"
-                class="w-full rounded-lg border border-[#aab4af]/30 bg-white px-3 py-2 text-sm"
+                class="w-full rounded-lg border border-[#bcd2c8]/60 bg-white px-3 py-2 text-sm"
                 [placeholder]="t('useNotePlaceholder')"
               />
             </div>
@@ -328,7 +328,7 @@
 
           <button
             type="button"
-            class="rounded-lg bg-[#2f6772] px-4 py-2 text-sm font-semibold text-white hover:bg-[#205a65]"
+            class="rounded-lg bg-[#bfe3ec] px-4 py-2 text-sm font-semibold text-[#1f5965] hover:bg-[#aad8e4]"
             (click)="useOT()"
           >
             {{ t('useBtn') }}
@@ -337,41 +337,98 @@
       </div>
 
       <aside class="lg:col-span-5">
-        <section class="rounded-2xl border border-[#aab4af]/20 bg-white p-5">
-          <div class="mb-4 flex items-center justify-between">
-            <h2 class="text-lg font-bold">{{ t('historyTitle') }}</h2>
-            <span class="rounded-full bg-[#9ef3d6] px-3 py-1 text-xs font-bold text-[#005d49]">
+        <section id="history-section" class="rounded-2xl border border-[#bcd2c8]/50 bg-white p-5">
+          <div class="mb-4 flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#c4ecdc]">
+                <span class="material-symbols-outlined text-[20px] text-[#17795d]" aria-hidden="true">history</span>
+              </div>
+              <div>
+                <h2 class="text-lg font-bold leading-tight">{{ t('historyTitle') }}</h2>
+                <p class="mt-0.5 text-[11px] text-[#6a7a72]">{{ t('historySubtitle') }}</p>
+              </div>
+            </div>
+            <span class="shrink-0 rounded-full bg-[#c4ecdc] px-3 py-1 text-xs font-bold text-[#12563f]">
               {{ t('grandTotalLabel') }}: {{ totalText }}
             </span>
           </div>
 
-          <div class="custom-scrollbar history-list space-y-3 overflow-y-auto pr-1">
-            <div *ngIf="sortedRecords.length === 0" class="history-empty">
-              <span class="material-symbols-outlined">schedule</span>
+          <div class="history-toolbar" role="tablist" [attr.aria-label]="t('historyTitle')">
+            <button
+              type="button"
+              role="tab"
+              class="history-filter"
+              [class.history-filter--active]="isHistoryFilter('all')"
+              [attr.aria-selected]="isHistoryFilter('all')"
+              (click)="setHistoryFilter('all')"
+            >
+              {{ t('filterAll') }}
+              <span class="history-filter__count">{{ records.length }}</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="history-filter"
+              [class.history-filter--active]="isHistoryFilter('earn')"
+              [attr.aria-selected]="isHistoryFilter('earn')"
+              (click)="setHistoryFilter('earn')"
+            >
+              {{ t('filterEarned') }}
+              <span class="history-filter__count">{{ earnCount }}</span>
+            </button>
+            <button
+              type="button"
+              role="tab"
+              class="history-filter"
+              [class.history-filter--active]="isHistoryFilter('use')"
+              [attr.aria-selected]="isHistoryFilter('use')"
+              (click)="setHistoryFilter('use')"
+            >
+              {{ t('filterUsed') }}
+              <span class="history-filter__count">{{ useCount }}</span>
+            </button>
+          </div>
+
+          <div class="custom-scrollbar history-list mt-4 space-y-3 overflow-y-auto pr-1">
+            <div *ngIf="records.length === 0" class="history-empty">
+              <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
               <p>{{ t('historyEmpty') }}</p>
             </div>
 
+            <div *ngIf="records.length > 0 && filteredRecords.length === 0" class="history-empty">
+              <span class="material-symbols-outlined" aria-hidden="true">filter_alt_off</span>
+              <p>{{ t('historyEmptyFiltered') }}</p>
+            </div>
+
             <article
-              *ngFor="let record of sortedRecords; trackBy: trackByRecordId"
+              *ngFor="let record of filteredRecords; trackBy: trackByRecordId"
               class="history-item"
               [class.history-item--use]="isUseRecord(record)"
             >
-              <div class="history-item__top">
-                <div>
-                  <p class="history-kind">{{ isUseRecord(record) ? t('useCardTitle') : t('calcCardTitle') }}</p>
-                  <h3 class="history-title">{{ record.activity || t('defaultActivity') }}</h3>
-                </div>
-                <div class="history-amount">{{ isUseRecord(record) ? '-' : '+' }} {{ toClockHM(record.value) }}</div>
+              <div class="history-avatar">
+                <span class="material-symbols-outlined" aria-hidden="true">
+                  {{ isUseRecord(record) ? 'event_available' : 'add_task' }}
+                </span>
               </div>
 
-              <p class="history-detail">{{ formatHistoryDetail(record) }}</p>
+              <div class="history-body">
+                <div class="history-item__top">
+                  <div>
+                    <p class="history-kind">{{ isUseRecord(record) ? t('useBadge') : t('earnBadge') }}</p>
+                    <h3 class="history-title">{{ record.activity || t('defaultActivity') }}</h3>
+                  </div>
+                  <div class="history-amount">{{ isUseRecord(record) ? '−' : '+' }} {{ toClockHM(record.value) }}</div>
+                </div>
 
-              <div class="history-meta">
-                <span class="history-date">
-                  <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
-                  <span>{{ formatRecordDate(record) }}</span>
-                </span>
-                <span class="history-chip">{{ getRecordTag(record) }}</span>
+                <p class="history-detail">{{ formatHistoryDetail(record) }}</p>
+
+                <div class="history-meta">
+                  <span class="history-date">
+                    <span class="material-symbols-outlined" aria-hidden="true">calendar_today</span>
+                    <span>{{ formatRecordDate(record) }}</span>
+                  </span>
+                  <span class="history-chip">{{ getRecordTag(record) }}</span>
+                </div>
               </div>
             </article>
           </div>

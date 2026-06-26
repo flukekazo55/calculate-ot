@@ -3,7 +3,7 @@
 }
 
 .form-clear-btn {
-  border: 1px solid rgba(170, 180, 175, 0.45);
+  border: 1px solid rgba(188, 210, 200, 0.7);
   border-radius: 0.7rem;
   min-height: 2.5rem;
   padding: 0 0.95rem;
@@ -11,15 +11,15 @@
   align-items: center;
   gap: 0.35rem;
   background: linear-gradient(180deg, #f4f9f6 0%, #e8f1ec 100%);
-  color: #2f6772;
+  color: #2a7180;
   font-size: 0.87rem;
   font-weight: 700;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-clear-btn:hover {
-  border-color: rgba(47, 103, 114, 0.45);
-  box-shadow: 0 7px 18px rgba(47, 103, 114, 0.15);
+  border-color: rgba(42, 113, 128, 0.45);
+  box-shadow: 0 7px 18px rgba(42, 113, 128, 0.15);
 }
 
 .form-clear-btn:active {
@@ -46,9 +46,9 @@
   pointer-events: auto;
   border-radius: 0.9rem;
   overflow: hidden;
-  border: 1px solid rgba(170, 180, 175, 0.35);
+  border: 1px solid rgba(188, 210, 200, 0.55);
   box-shadow: 0 14px 36px rgba(43, 53, 48, 0.1);
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
@@ -70,13 +70,13 @@
 }
 
 .alert-card--success .alert-icon {
-  background: #9ef3d6;
-  color: #005d49;
+  background: #c4ecdc;
+  color: #12563f;
 }
 
 .alert-card--error .alert-icon {
-  background: #fa746f;
-  color: #fff7f6;
+  background: #f6c4c1;
+  color: #8a302d;
 }
 
 .alert-icon .material-symbols-outlined {
@@ -95,12 +95,12 @@
   font-size: 1rem;
   font-weight: 800;
   line-height: 1.2;
-  color: #2b3530;
+  color: #38463f;
 }
 
 .alert-copy p {
   margin: 0.35rem 0 0;
-  color: #57615d;
+  color: #6a7a72;
   font-size: 0.84rem;
   line-height: 1.4;
   word-break: break-word;
@@ -109,7 +109,7 @@
 .alert-close {
   border: 0;
   background: transparent;
-  color: #727d78;
+  color: #8a958f;
   padding: 0.2rem;
   border-radius: 0.45rem;
   line-height: 1;
@@ -117,8 +117,8 @@
 }
 
 .alert-close:hover {
-  color: #2b3530;
-  background: rgba(170, 180, 175, 0.14);
+  color: #38463f;
+  background: rgba(188, 210, 200, 0.22);
 }
 
 .alert-close .material-symbols-outlined {
@@ -130,7 +130,7 @@
   justify-content: flex-end;
   gap: 0.55rem;
   padding: 0.75rem 1rem 0.95rem;
-  background: #eff5f0;
+  background: #eef5f1;
 }
 
 .alert-btn {
@@ -141,7 +141,7 @@
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition: transform 0.15s ease, filter 0.15s ease, background-color 0.15s ease;
 }
 
 .alert-btn:active {
@@ -150,25 +150,29 @@
 
 .alert-btn--ghost {
   background: transparent;
-  color: #006b54;
+  color: #17795d;
 }
 
 .alert-btn--ghost:hover {
-  background: rgba(158, 243, 214, 0.35);
+  background: rgba(196, 236, 220, 0.55);
 }
 
 .alert-btn--solid {
-  background: #006b54;
-  color: #e4fff3;
+  background: #a6e2cb;
+  color: #12563f;
 }
 
 .alert-btn--solid:hover {
-  filter: brightness(0.95);
+  background: #92d9bd;
 }
 
 .alert-card--error .alert-btn--solid {
-  background: #a83836;
-  color: #fff7f6;
+  background: #f4b3af;
+  color: #7a2a27;
+}
+
+.alert-card--error .alert-btn--solid:hover {
+  background: #efa19c;
 }
 
 .timepicker-wrap {
@@ -181,7 +185,7 @@
   border-radius: 0.75rem;
   min-height: 3.5rem;
   padding: 0.8rem 0.95rem;
-  background: #e1eae5;
+  background: #e3efe9;
   display: flex;
   align-items: center;
   gap: 0.7rem;
@@ -191,33 +195,33 @@
 }
 
 .time-input-collapsed:hover {
-  background: #dae5df;
+  background: #d6e6de;
 }
 
 .time-input-collapsed:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 107, 84, 0.2);
+  box-shadow: 0 0 0 2px rgba(23, 121, 93, 0.25);
 }
 
 .time-input-collapsed--active {
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(0, 107, 84, 0.25);
+  box-shadow: 0 0 0 1px rgba(23, 121, 93, 0.3);
 }
 
 .time-input-collapsed__icon {
-  color: #727d78;
+  color: #8a958f;
   font-size: 1.1rem;
   line-height: 1;
   transition: color 0.2s ease;
 }
 
 .time-input-collapsed__icon--active {
-  color: #006b54;
+  color: #17795d;
   font-variation-settings: "FILL" 1;
 }
 
 .time-input-collapsed__text {
-  color: #2b3530;
+  color: #38463f;
   font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -234,9 +238,9 @@
   left: 0;
   width: 17rem;
   border-radius: 0.75rem;
-  border: 1px solid rgba(170, 180, 175, 0.35);
+  border: 1px solid rgba(188, 210, 200, 0.6);
   background: #ffffff;
-  box-shadow: 0 12px 32px rgba(43, 53, 48, 0.06);
+  box-shadow: 0 12px 32px rgba(43, 53, 48, 0.1);
   overflow: hidden;
   z-index: 45;
 }
@@ -244,7 +248,7 @@
 .timepicker-selected {
   margin: 1rem 1rem 0.8rem;
   border-radius: 0.65rem;
-  background: #eff5f0;
+  background: #eef5f1;
   padding: 0.7rem 0.8rem;
   display: flex;
   align-items: center;
@@ -253,7 +257,7 @@
 }
 
 .timepicker-selected__value {
-  color: #006b54;
+  color: #17795d;
   font-size: 1.8rem;
   font-weight: 800;
   line-height: 1;
@@ -281,7 +285,7 @@
   height: 3rem;
   transform: translateY(-50%);
   border-radius: 0.55rem;
-  background: rgba(3, 108, 85, 0.05);
+  background: rgba(23, 121, 93, 0.07);
   pointer-events: none;
 }
 
@@ -294,7 +298,7 @@
 .timepicker-divider {
   width: 1px;
   margin: 0.7rem 0;
-  background: #dae5df;
+  background: #d6e6de;
 }
 
 .timepicker-option {
@@ -303,7 +307,7 @@
   border: 0;
   border-radius: 0.5rem;
   background: transparent;
-  color: #57615d;
+  color: #6a7a72;
   font-size: 1.1rem;
   font-weight: 600;
   line-height: 1;
@@ -313,14 +317,14 @@
 }
 
 .timepicker-option--active {
-  color: #006b54;
+  color: #17795d;
   font-size: 1.35rem;
   font-weight: 800;
   transform: scale(1.02);
 }
 
 .timepicker-actions {
-  background: #eff5f0;
+  background: #eef5f1;
   padding: 0.7rem;
   display: flex;
   align-items: center;
@@ -353,21 +357,21 @@
 .timepicker-action-btn--ghost {
   flex: 1;
   background: transparent;
-  color: #006b54;
+  color: #17795d;
 }
 
 .timepicker-action-btn--ghost:hover {
-  background: rgba(158, 243, 214, 0.45);
+  background: rgba(196, 236, 220, 0.6);
 }
 
 .timepicker-action-btn--solid {
   flex: 2;
-  background: #006b54;
-  color: #e4fff3;
+  background: #a6e2cb;
+  color: #12563f;
 }
 
 .timepicker-action-btn--solid:hover {
-  background: #005f4a;
+  background: #92d9bd;
 }
 
 @media (max-width: 768px) {

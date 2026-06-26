@@ -18,6 +18,7 @@ declare global {
 
 type Lang = 'th' | 'en';
 type TimeField = 'startTime' | 'endTime';
+type HistoryFilter = 'all' | 'earn' | 'use';
 
 interface UiAlert {
   id: number;
@@ -51,6 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
   backendAvailable = true;
   apiBase = '';
   alerts: UiAlert[] = [];
+
+  historyFilter: HistoryFilter = 'all';
 
   dayType: Extract<DayType, 'weekday' | 'weekend' | 'holiday'> = 'weekday';
   activity = '';
@@ -163,11 +166,16 @@ export class AppComponent implements OnInit, OnDestroy {
   calc(): void {
     const activity = this.activity.trim() || this.t('defaultActivity');
     const start = this.parseTime(this.startTime);
-    const end = this.parseTime(this.endTime);
+    let end = this.parseTime(this.endTime);
 
-    if (Number.isNaN(start) || Number.isNaN(end) || end <= start) {
+    if (Number.isNaN(start) || Number.isNaN(end) || end === start) {
       this.showError(this.t('calcInvalidRange'));
       return;
+    }
+
+    // Support overnight shifts (e.g. 20:00 -> 02:00) by rolling the end past midnight.
+    if (end < start) {
+      end += 24 * 60;
     }
 
     const earnedHours = this.calcWeighted(this.dayType, start, end) / 60;
@@ -240,6 +248,33 @@ export class AppComponent implements OnInit, OnDestroy {
 
   get sortedRecords(): OtRecord[] {
     return [...this.records].reverse();
+  }
+
+  get filteredRecords(): OtRecord[] {
+    const sorted = this.sortedRecords;
+    if (this.historyFilter === 'earn') {
+      return sorted.filter((record) => !this.isUseRecord(record));
+    }
+    if (this.historyFilter === 'use') {
+      return sorted.filter((record) => this.isUseRecord(record));
+    }
+    return sorted;
+  }
+
+  get earnCount(): number {
+    return this.records.reduce((count, record) => count + (this.isUseRecord(record) ? 0 : 1), 0);
+  }
+
+  get useCount(): number {
+    return this.records.reduce((count, record) => count + (this.isUseRecord(record) ? 1 : 0), 0);
+  }
+
+  setHistoryFilter(filter: HistoryFilter): void {
+    this.historyFilter = filter;
+  }
+
+  isHistoryFilter(filter: HistoryFilter): boolean {
+    return this.historyFilter === filter;
   }
 
   isUseRecord(record: OtRecord): boolean {
@@ -416,9 +451,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private syncUseTimeFromRange(): void {
     const start = this.parseTime(this.startTime);
-    const end = this.parseTime(this.endTime);
-    if (Number.isNaN(start) || Number.isNaN(end) || end <= start) {
+    let end = this.parseTime(this.endTime);
+    if (Number.isNaN(start) || Number.isNaN(end) || end === start) {
       return;
+    }
+
+    // Mirror the overnight handling in calc() so 20:00 -> 02:00 yields 6h.
+    if (end < start) {
+      end += 24 * 60;
     }
 
     const duration = end - start;
